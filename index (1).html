@@ -1,0 +1,1979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Valour Games </title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steamDarkBg: '#171a21',
+                        steamBodyBg: '#1b2838',
+                        steamCardBg: '#2a475e',
+                        steamBlue: '#66c0f4',
+                        steamGreen: '#a3cf06',
+                        steamLightGray: '#c7d5e0',
+                        steamDarkGray: '#3d4450'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icon Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* =============================================
+           PERSON 1 — Header & Navigation Improvements
+           ============================================= */
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #171a21; }
+        ::-webkit-scrollbar-thumb { background: #3d4450; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #66c0f4; }
+
+        /* Existing utility classes kept intact */
+        .featured-radial {
+            background: radial-gradient(circle at top right, rgba(102, 192, 244, 0.15), transparent 60%);
+        }
+        .glow-green { box-shadow: 0 0 15px rgba(163, 207, 6, 0.25); }
+        .glow-blue  { box-shadow: 0 0 15px rgba(102, 192, 244, 0.25); }
+
+        /* ── Logo pulse ring ── */
+        .logo-ring {
+            position: relative;
+        }
+        .logo-ring::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 14px;
+            background: conic-gradient(from 180deg, #66c0f4, #a3cf06, #66c0f4);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .logo-ring:hover::after { opacity: 1; }
+
+        /* ── Nav tab — underline glow style ── */
+        .tab-btn {
+            position: relative;
+            transition: color 0.2s ease, background 0.2s ease;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: #66c0f4;
+            border-radius: 2px;
+            box-shadow: 0 0 8px #66c0f4;
+            transition: width 0.25s ease;
+        }
+        .tab-btn:hover::after { width: 60%; }
+        .tab-btn.active-tab::after { width: 70%; }
+
+        /* ── Header icon buttons ── */
+        .header-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(42,71,94,0.6);
+            border: 1px solid rgba(102,192,244,0.15);
+            border-radius: 12px;
+            padding: 9px 10px;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+            cursor: pointer;
+        }
+        .header-icon-btn:hover {
+            background: rgba(102,192,244,0.12);
+            border-color: rgba(102,192,244,0.4);
+            transform: translateY(-1px);
+        }
+
+        /* ── Notification dot animation ── */
+        @keyframes ping-dot {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50%       { transform: scale(1.5); opacity: 0.5; }
+        }
+        .ping-dot { animation: ping-dot 1.8s ease-in-out infinite; }
+
+        /* ── Status ticker scroll ── */
+        @keyframes ticker {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .ticker-track {
+            display: flex;
+            width: max-content;
+            animation: ticker 28s linear infinite;
+        }
+        .ticker-track:hover { animation-play-state: paused; }
+        .ticker-wrap {
+            overflow: hidden;
+            mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+        }
+
+        /* ── Mobile hamburger ── */
+        .hamburger-line {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: #c7d5e0;
+            border-radius: 2px;
+            transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
+            transform-origin: center;
+        }
+        #mobile-menu { transition: max-height 0.35s ease, opacity 0.3s ease; }
+        #mobile-menu.menu-open { max-height: 400px; opacity: 1; pointer-events: auto; }
+        #mobile-menu.menu-closed { max-height: 0; opacity: 0; pointer-events: none; }
+
+        /* hamburger → X animation */
+        #ham-btn.open .hamburger-line:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+        #ham-btn.open .hamburger-line:nth-child(2) { opacity: 0; width: 0; }
+        #ham-btn.open .hamburger-line:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+        /* ── Header bottom glow border ── */
+        .header-glow-border {
+            box-shadow: 0 1px 0 0 rgba(102,192,244,0.12), 0 2px 12px 0 rgba(102,192,244,0.04);
+        }
+    </style>
+</head>
+<body class="bg-steamBodyBg text-steamLightGray font-sans min-h-screen flex flex-col antialiased select-none">
+
+    <!-- ═══════════════════════════════════════════
+         TOP HEADER  |  Person 1 — Improved Design
+         ═══════════════════════════════════════════ -->
+    <header class="bg-steamDarkBg sticky top-0 z-50 header-glow-border">
+
+        <!-- Main header row -->
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+
+            <!-- ── Logo Brand ── -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <div class="logo-ring bg-gradient-to-tr from-cyan-700 via-blue-500 to-cyan-400 p-2.5 rounded-xl shadow-lg text-white">
+                    <!-- Custom controller icon — no third-party IP -->
+                    <i class="fa-solid fa-gamepad text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-white tracking-widest leading-none">VAPOR</h1>
+                    <span class="text-[10px] text-steamBlue uppercase font-black tracking-[0.2em] block mt-0.5">
+                        Platform Master Edition
+                    </span>
+                </div>
+            </div>
+
+            <!-- ── Desktop Nav (hidden on mobile) ── -->
+            <nav id="desktop-nav" class="hidden md:flex items-center bg-black/40 rounded-full px-2 py-1.5 border border-steamDarkGray/30 gap-0.5">
+                <button onclick="switchTab('store')" id="nav-store"
+                    class="tab-btn active-tab px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap bg-steamBlue text-steamDarkBg shadow-md">
+                    <i class="fa-solid fa-store mr-1.5"></i>Store
+                </button>
+                <button onclick="switchTab('library')" id="nav-library"
+                    class="tab-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-gamepad mr-1.5"></i>Library
+                    <span id="lib-count-badge" class="bg-steamDarkGray text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">1</span>
+                </button>
+                <button onclick="switchTab('social')" id="nav-social"
+                    class="tab-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-users mr-1.5"></i>Social
+                </button>
+                <button onclick="switchTab('studio')" id="nav-studio"
+                    class="tab-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-database mr-1.5"></i>DB Studio
+                </button>
+                <button onclick="switchTab('connection')" id="nav-connection"
+                    class="tab-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-server mr-1.5"></i>Connector
+                    <span id="conn-indicator-dot" class="ping-dot inline-block w-2 h-2 rounded-full bg-emerald-400 ml-1.5"></span>
+                </button>
+            </nav>
+
+            <!-- ── Right side: icons + profile ── -->
+            <div class="flex items-center gap-2">
+
+                <!-- Notification bell -->
+                <button class="header-icon-btn relative" title="Notifications">
+                    <i class="fa-solid fa-bell text-steamLightGray text-sm"></i>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full border border-steamDarkBg"></span>
+                </button>
+
+                <!-- Cart -->
+                <button onclick="openCartModal()" class="header-icon-btn relative" title="Cart">
+                    <i class="fa-solid fa-shopping-cart text-steamBlue text-sm"></i>
+                    <span id="cart-counter" class="absolute -top-1.5 -right-1.5 bg-steamGreen text-steamDarkBg font-extrabold text-[10px] w-5 h-5 rounded-full flex items-center justify-center hidden border border-steamDarkBg animate-pulse">0</span>
+                </button>
+
+                <!-- Profile badge -->
+                <div class="flex items-center gap-2.5 border-l border-gray-800 pl-3 ml-1">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&auto=format&fit=crop&q=80"
+                             alt="Avatar"
+                             class="w-9 h-9 rounded-full border-2 border-steamGreen object-cover">
+                        <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-steamDarkBg rounded-full"></span>
+                    </div>
+                    <div class="hidden sm:block text-left">
+                        <span class="text-xs font-black text-white block leading-tight">DevGamer_99</span>
+                        <span class="text-[10px] text-steamGreen block">
+                            Wallet: <span id="header-balance-val">$150.00</span>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Mobile hamburger (visible only on small screens) -->
+                <button id="ham-btn" onclick="toggleMobileMenu()"
+                    class="md:hidden ml-2 header-icon-btn flex-col gap-[5px]"
+                    aria-label="Toggle menu" aria-expanded="false">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ── Mobile dropdown nav ── -->
+        <div id="mobile-menu" class="menu-closed md:hidden overflow-hidden bg-steamDarkBg border-t border-gray-800/60">
+            <nav class="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-1">
+                <button onclick="switchTab('store'); closeMobileMenu()" id="mob-nav-store"
+                    class="mob-tab-btn w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-white bg-steamBlue/15 border border-steamBlue/20 flex items-center gap-3">
+                    <i class="fa-solid fa-store text-steamBlue w-4"></i>Store
+                </button>
+                <button onclick="switchTab('library'); closeMobileMenu()" id="mob-nav-library"
+                    class="mob-tab-btn w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-steamLightGray hover:bg-white/5 flex items-center gap-3">
+                    <i class="fa-solid fa-gamepad text-steamBlue w-4"></i>Library
+                    <span id="mob-lib-count-badge" class="bg-steamDarkGray text-white text-[10px] px-1.5 py-0.5 rounded-full ml-auto">1</span>
+                </button>
+                <button onclick="switchTab('social'); closeMobileMenu()" id="mob-nav-social"
+                    class="mob-tab-btn w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-steamLightGray hover:bg-white/5 flex items-center gap-3">
+                    <i class="fa-solid fa-users text-steamBlue w-4"></i>Social & Chat
+                </button>
+                <button onclick="switchTab('studio'); closeMobileMenu()" id="mob-nav-studio"
+                    class="mob-tab-btn w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-steamLightGray hover:bg-white/5 flex items-center gap-3">
+                    <i class="fa-solid fa-database text-steamBlue w-4"></i>DB & PHP Studio
+                </button>
+                <button onclick="switchTab('connection'); closeMobileMenu()" id="mob-nav-connection"
+                    class="mob-tab-btn w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-steamLightGray hover:bg-white/5 flex items-center gap-3">
+                    <i class="fa-solid fa-server text-steamBlue w-4"></i>Connector
+                    <span class="ping-dot inline-block w-2 h-2 rounded-full bg-emerald-400 ml-auto"></span>
+                </button>
+            </nav>
+        </div>
+
+    </header>
+
+    <!-- ═══════════════════════════════════════
+         STATUS RIBBON  |  Scrolling ticker
+         ═══════════════════════════════════════ -->
+    <section class="bg-black/60 border-b border-gray-950 py-1.5 px-0 text-[10px] sm:text-[11px] text-gray-400 overflow-hidden">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-0 sm:gap-0 px-4">
+
+            <!-- Scrolling ticker (left side) -->
+            <div class="ticker-wrap flex-1 hidden sm:block">
+                <div class="ticker-track gap-12 flex">
+                    <!-- Duplicated for seamless loop -->
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-circle text-steamGreen text-[8px] mr-1.5 animate-pulse"></i>Vapor Client Online</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-globe text-steamBlue mr-1.5"></i>26,419,081 active gamers globally</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-bolt text-yellow-400 mr-1.5"></i>Daily deals refreshed</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-trophy text-amber-400 mr-1.5"></i>New achievements unlocked</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-circle text-steamGreen text-[8px] mr-1.5 animate-pulse"></i>Vapor Client Online</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-globe text-steamBlue mr-1.5"></i>26,419,081 active gamers globally</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-bolt text-yellow-400 mr-1.5"></i>Daily deals refreshed</span>
+                    <span class="whitespace-nowrap pr-12"><i class="fa-solid fa-trophy text-amber-400 mr-1.5"></i>New achievements unlocked</span>
+                </div>
+            </div>
+
+            <!-- Mobile: static single line -->
+            <div class="sm:hidden flex items-center gap-3 py-0.5">
+                <span><i class="fa-solid fa-circle text-steamGreen text-[8px] mr-1 animate-pulse"></i>Vapor Online · 26M+ gamers</span>
+            </div>
+
+            <!-- Right side badges -->
+            <div class="flex items-center gap-3 flex-shrink-0">
+                <span id="system-mode-label" class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono font-bold">
+                    In-Memory Local Sandbox
+                </span>
+                <span class="text-amber-400 font-bold hidden sm:inline">
+                    <i class="fa-solid fa-shield-halved mr-1"></i>Admin Console
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Mobile hamburger JS ── -->
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn  = document.getElementById('ham-btn');
+            const open = menu.classList.contains('menu-open');
+            menu.classList.toggle('menu-open',  !open);
+            menu.classList.toggle('menu-closed', open);
+            btn.classList.toggle('open', !open);
+            btn.setAttribute('aria-expanded', String(!open));
+        }
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const btn  = document.getElementById('ham-btn');
+            menu.classList.replace('menu-open', 'menu-closed');
+            btn.classList.remove('open');
+            btn.setAttribute('aria-expanded', 'false');
+        }
+    </script>
+
+    <!-- MAIN BODY workspace -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full">
+
+        <!-- ================= 1. STORE TAB ================= -->
+        <section id="tab-store" class="space-y-8">
+            
+            <!-- Featured Banner (Hero) -->
+            <div class="relative bg-gradient-to-r from-slate-900 to-steamCardBg rounded-2xl overflow-hidden min-h-[320px] flex flex-col md:flex-row border border-steamBlue/10 banner-glow featured-radial">
+                <div class="md:w-3/5 relative">
+                    <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80" alt="Cyberstrike" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/90 via-black/40 to-transparent"></div>
+                </div>
+                <div class="md:w-2/5 p-6 md:p-8 flex flex-col justify-between z-10 bg-gradient-to-t md:bg-none from-steamDarkBg md:from-transparent">
+                    <div>
+                        <span class="bg-steamBlue/20 text-steamBlue border border-steamBlue/30 text-[10px] px-2.5 py-1 rounded-full font-black uppercase tracking-wider">FEATURED RECRUIT</span>
+                        <h2 class="text-3xl font-black text-white mt-3">Cyberstrike: Neo Tokyo</h2>
+                        <p class="text-xs text-steamLightGray/80 mt-2 leading-relaxed">Command heavy tactical mechs in the neon shadows of a corporate dystopian warzone. Connect with friends, unlock trophies, and synchronize scores with SQL databases.</p>
+                        <div class="flex flex-wrap gap-2 mt-4">
+                            <span class="bg-steamDarkBg/60 text-[9px] font-bold px-2 py-1 rounded text-steamBlue border border-gray-800">Action</span>
+                            <span class="bg-steamDarkBg/60 text-[9px] font-bold px-2 py-1 rounded text-steamBlue border border-gray-800">Tactical Mech</span>
+                            <span class="bg-steamDarkBg/60 text-[9px] font-bold px-2 py-1 rounded text-steamBlue border border-gray-800">Indie Showcase</span>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between gap-4 border-t border-gray-800/40 pt-4">
+                        <div>
+                            <span class="text-xs text-gray-500 line-through block">$59.99</span>
+                            <span class="text-xl font-black text-white">$29.99 <span class="bg-steamGreen text-steamDarkBg text-[10px] font-black px-1.5 py-0.5 rounded ml-1.5">-50%</span></span>
+                        </div>
+                        <button onclick="addToCart(1)" class="bg-steamGreen hover:bg-lime-500 text-steamDarkBg font-extrabold px-6 py-3 rounded-lg text-xs tracking-wider uppercase transition shadow-md glow-green transform active:scale-95">
+                            <i class="fa-solid fa-cart-plus mr-1.5 text-sm"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Categories and Search -->
+            <div class="bg-steamDarkBg/60 p-4 rounded-xl border border-gray-900 flex flex-col md:flex-row justify-between items-center gap-4 shadow-inner">
+                <div class="flex flex-wrap items-center gap-1.5 w-full md:w-auto">
+                    <button onclick="filterCategory('All')" class="cat-btn px-4 py-2 rounded-lg text-xs font-extrabold bg-steamBlue text-steamDarkBg transition">All Games</button>
+                    <button onclick="filterCategory('Action')" class="cat-btn px-4 py-2 rounded-lg text-xs font-bold bg-steamDarkGray/40 text-steamLightGray hover:bg-steamCardBg/40 transition">Action</button>
+                    <button onclick="filterCategory('RPG')" class="cat-btn px-4 py-2 rounded-lg text-xs font-bold bg-steamDarkGray/40 text-steamLightGray hover:bg-steamCardBg/40 transition">RPG</button>
+                    <button onclick="filterCategory('Adventure')" class="cat-btn px-4 py-2 rounded-lg text-xs font-bold bg-steamDarkGray/40 text-steamLightGray hover:bg-steamCardBg/40 transition">Adventure</button>
+                    <button onclick="filterCategory('Indie')" class="cat-btn px-4 py-2 rounded-lg text-xs font-bold bg-steamDarkGray/40 text-steamLightGray hover:bg-steamCardBg/40 transition">Indie</button>
+                </div>
+                
+                <div class="relative w-full md:w-72">
+                    <input type="text" id="store-search-bar" onkeyup="renderStoreCatalog()" placeholder="Search store directory..." class="w-full bg-black text-white text-xs pl-10 pr-4 py-2.5 rounded-lg border border-steamDarkGray/40 focus:outline-none focus:border-steamBlue transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-500 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Games Grid -->
+            <div>
+                <h3 class="text-xs font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <span class="w-1.5 h-4 bg-steamBlue rounded-full"></span> Vapor Catalog Showcase
+                </h3>
+                <div id="store-games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Loaded via JavaScript -->
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= 2. LIBRARY TAB ================= -->
+        <section id="tab-library" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Side: Vault Catalog Menu -->
+            <div class="lg:col-span-4 bg-steamDarkBg p-5 rounded-2xl border border-gray-900 space-y-4 shadow-lg">
+                <div class="border-b border-gray-800 pb-3 flex justify-between items-center">
+                    <h4 class="text-xs font-black text-white uppercase tracking-widest"><i class="fa-solid fa-vault mr-1 text-steamBlue"></i> Game Library Vault</h4>
+                    <span id="lib-count-lbl" class="bg-steamBlue/10 text-steamBlue text-[10px] font-mono px-2 py-0.5 rounded">0 Owned</span>
+                </div>
+                <div id="library-games-list" class="space-y-2 max-h-[420px] overflow-y-auto pr-2">
+                    <!-- Dynamic ownership records -->
+                </div>
+            </div>
+
+            <!-- Right Side: Active Launcher Interface / Canvas Sandbox -->
+            <div class="lg:col-span-8 bg-black/30 p-6 rounded-2xl border border-gray-900 min-h-[480px] flex flex-col justify-between shadow-inner" id="active-game-viewport">
+                <div class="text-center py-24 text-gray-500">
+                    <i class="fa-solid fa-gamepad text-6xl mb-4 animate-bounce text-steamCardBg"></i>
+                    <h4 class="text-lg font-black text-white">No Game Selected</h4>
+                    <p class="text-xs mt-2 max-w-sm mx-auto leading-relaxed">Select any owned game from the left sidebar to unlock and launch its interactive HTML5 Canvas execution engine.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= 3. SOCIAL TAB ================= -->
+        <section id="tab-social" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Side: Friends List -->
+            <div class="lg:col-span-4 bg-steamDarkBg p-5 rounded-2xl border border-gray-900 space-y-4 shadow-lg">
+                <div class="border-b border-gray-800 pb-3 flex justify-between items-center">
+                    <h4 class="text-xs font-black text-white uppercase tracking-widest"><i class="fa-solid fa-user-group mr-1.5 text-steamBlue"></i> Friends Panel</h4>
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                </div>
+                <div id="friends-list-container" class="space-y-2">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Right Side: Live Conversation Hub -->
+            <div class="lg:col-span-8 bg-steamDarkBg/50 p-6 rounded-2xl border border-gray-900 min-h-[480px] flex flex-col justify-between shadow-lg" id="social-chat-viewport">
+                <div class="text-center py-24 text-gray-500">
+                    <i class="fa-solid fa-comments text-6xl mb-4 text-steamCardBg"></i>
+                    <h4 class="text-lg font-black text-white">Direct Messaging Sandbox</h4>
+                    <p class="text-xs mt-2 max-w-sm mx-auto leading-relaxed">Choose an online gamer profile from your dashboard sidebar to initiate client-to-client query simulations.</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= 4. DB & PHP STUDIO ================= -->
+        <section id="tab-studio" class="hidden space-y-8">
+            
+            <!-- Architecture Sandbox Intro -->
+            <div class="bg-gradient-to-r from-steamCardBg/40 to-slate-900 p-6 rounded-2xl border-l-4 border-amber-500 flex flex-col md:flex-row justify-between items-center gap-6 shadow-md">
+                <div>
+                    <h3 class="text-lg font-black text-white flex items-center gap-2">
+                        <i class="fa-solid fa-microchip text-amber-500"></i> Relational Database & PHP Studio
+                    </h3>
+                    <p class="text-xs text-gray-400 mt-1.5 max-w-4xl leading-relaxed">
+                        Examine the core underlying structures of our decoupled architecture. Here, you can write and execute raw query simulations against our mock relational database engine or pull fully modular production backend templates.
+                    </p>
+                </div>
+                <button onclick="downloadAllSourceCode()" class="bg-amber-500 hover:bg-amber-600 text-steamDarkBg font-black text-xs py-3 px-6 rounded-lg transition shrink-0 uppercase tracking-wider flex items-center gap-2 shadow-md">
+                    <i class="fa-solid fa-download text-sm"></i> Download Server Code
+                </button>
+            </div>
+
+            <!-- Interactive SQL Simulator Panel -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <!-- Query Editor -->
+                <div class="lg:col-span-7 bg-steamDarkBg p-5 rounded-2xl border border-gray-900 flex flex-col justify-between gap-5 shadow-lg">
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <h4 class="text-xs font-black text-white uppercase tracking-widest"><i class="fa-solid fa-terminal text-steamBlue mr-1"></i> Interactive SQL Console</h4>
+                            <span class="text-[10px] bg-steamBlue/10 text-steamBlue border border-steamBlue/20 px-2 py-0.5 rounded font-mono font-bold">Local Engine</span>
+                        </div>
+
+                        <!-- Presets -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="loadSQLPreset('select_catalog')" class="text-left bg-black/40 hover:bg-steamCardBg/30 p-2.5 rounded border border-gray-800 text-[10px] font-mono text-cyan-300">
+                                <span class="text-gray-500 block text-[9px] font-black uppercase">Preset 1</span>
+                                SELECT * FROM games...
+                            </button>
+                            <button onclick="loadSQLPreset('select_purchased')" class="text-left bg-black/40 hover:bg-steamCardBg/30 p-2.5 rounded border border-gray-800 text-[10px] font-mono text-cyan-300">
+                                <span class="text-gray-500 block text-[9px] font-black uppercase">Preset 2</span>
+                                SELECT JOIN purchases...
+                            </button>
+                            <button onclick="loadSQLPreset('select_friends')" class="text-left bg-black/40 hover:bg-steamCardBg/30 p-2.5 rounded border border-gray-800 text-[10px] font-mono text-cyan-300">
+                                <span class="text-gray-500 block text-[9px] font-black uppercase">Preset 3</span>
+                                SELECT friendships...
+                            </button>
+                        </div>
+
+                        <!-- Text Area Input -->
+                        <div class="relative bg-black rounded-xl overflow-hidden border border-steamDarkGray/30 shadow-inner">
+                            <div class="bg-steamDarkGray/20 px-4 py-2 text-[10px] font-mono text-gray-500 border-b border-gray-900 flex justify-between">
+                                <span>SQL QUERY INPUT</span>
+                                <span>TERMINATED BY ';'</span>
+                            </div>
+                            <textarea id="sql-query-input" rows="5" class="w-full bg-black text-green-400 font-mono text-xs p-4 focus:outline-none resize-none">SELECT * FROM games WHERE price < 30.00;</textarea>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center border-t border-gray-800 pt-3">
+                        <button onclick="wipeSimulatedData()" class="text-xs text-rose-400 hover:underline"><i class="fa-solid fa-trash-arrow-up mr-1"></i> Reset Tables Data</button>
+                        <button onclick="executeSQLSimulation()" class="bg-steamBlue hover:bg-cyan-400 text-steamDarkBg font-black text-xs py-2.5 px-6 rounded-lg transition shadow-md glow-blue uppercase">Execute Query</button>
+                    </div>
+                </div>
+
+                <!-- Result Terminal Output -->
+                <div class="lg:col-span-5 bg-steamDarkBg p-5 rounded-2xl border border-gray-900 flex flex-col justify-between shadow-lg">
+                    <div>
+                        <h4 class="text-xs font-black text-white uppercase tracking-widest mb-4"><i class="fa-solid fa-table text-emerald-400 mr-1.5"></i> Execution Grid Output</h4>
+                        <div class="overflow-x-auto max-h-[220px] rounded-lg border border-gray-800 bg-black/30">
+                            <table id="sql-result-table" class="w-full text-left font-mono text-[10px] border-collapse">
+                                <thead class="bg-black/80 text-steamBlue border-b border-gray-800">
+                                    <tr>
+                                        <th class="p-2.5 font-bold">System Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-900/60 text-gray-300">
+                                    <tr>
+                                        <td class="p-2.5 italic text-gray-500">Awaiting your execution instruction...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="bg-black/50 p-3.5 rounded-lg border border-gray-800 text-[10px] font-mono flex justify-between text-gray-400">
+                        <span>Parser Status: <b id="sql-parser-status" class="text-emerald-400">Active</b></span>
+                        <span>Matched Rows: <b id="sql-matched-rows" class="text-white">0</b></span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Production Script Blueprints Vault -->
+            <div class="bg-steamDarkBg rounded-2xl border border-gray-900 overflow-hidden shadow-lg">
+                
+                <div class="bg-black/30 px-6 py-4 border-b border-gray-900 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h4 class="text-xs font-black text-white uppercase tracking-widest"><i class="fa-brands fa-php text-lg text-indigo-400 mr-1"></i> Backend Core Code Repository</h4>
+                        <span class="text-[10px] text-gray-400 block mt-1">Copy verified files to bind your decoupled frontend with your MySQL databases.</span>
+                    </div>
+
+                    <div class="flex flex-wrap gap-1 bg-black/60 p-1 rounded-lg border border-steamDarkGray/30 text-xs">
+                        <button onclick="toggleScriptCode('schema')" id="sc-btn-schema" class="script-btn px-3 py-1.5 rounded text-[10px] font-bold bg-steamBlue text-steamDarkBg">schema.sql</button>
+                        <button onclick="toggleScriptCode('config')" id="sc-btn-config" class="script-btn px-3 py-1.5 rounded text-[10px] font-bold text-gray-400">config.php</button>
+                        <button onclick="toggleScriptCode('get_games')" id="sc-btn-get_games" class="script-btn px-3 py-1.5 rounded text-[10px] font-bold text-gray-400">get_games.php</button>
+                        <button onclick="toggleScriptCode('purchase')" id="sc-btn-purchase" class="script-btn px-3 py-1.5 rounded text-[10px] font-bold text-gray-400">purchase.php</button>
+                        <button onclick="toggleScriptCode('social')" id="sc-btn-social" class="script-btn px-3 py-1.5 rounded text-[10px] font-bold text-gray-400">social.php</button>
+                        <button onclick="toggleScriptCode('save_game')" id="sc-btn-save_game" class="script-btn px-3 py-1.5 rounded text-[10px] font-bold text-gray-400">save_game.php</button>
+                    </div>
+                </div>
+
+                <!-- Code Workspace -->
+                <div class="relative bg-[#0d1117] p-6 max-h-[360px] overflow-y-auto font-mono text-[11px] text-emerald-400">
+                    <button onclick="copyCurrentScript()" class="absolute top-4 right-4 bg-steamCardBg hover:bg-steamBlue hover:text-steamDarkBg text-steamLightGray text-[10px] px-3.5 py-1.5 rounded-lg border border-gray-700/80 transition flex items-center gap-2 shadow-md">
+                        <i class="fa-solid fa-copy"></i> Copy Script
+                    </button>
+                    <pre id="script-code-block" class="whitespace-pre select-all pr-12"></pre>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ================= 5. CONNECTOR TAB ================= -->
+        <section id="tab-connection" class="hidden space-y-8">
+            
+            <div class="bg-steamDarkBg p-6 rounded-2xl border border-steamBlue/20 space-y-6 shadow-lg">
+                <div>
+                    <h3 class="text-base font-black text-white"><i class="fa-solid fa-gears text-steamBlue mr-1"></i> Decoupled API Integration Controller</h3>
+                    <p class="text-xs text-gray-400 mt-1">Configure your remote server routing parameters to bypass CORS and link components dynamically.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 mb-2 uppercase tracking-wider">Connection Channel</label>
+                        <select id="config-chan-mode" onchange="toggleClientChannelDisplay()" class="w-full bg-black text-white rounded-lg p-3 border border-steamDarkGray/40 focus:outline-none focus:border-steamBlue text-xs font-black">
+                            <option value="sandbox">Local In-Memory Simulator (Offline Sandbox)</option>
+                            <option value="api">Decoupled REST API (PHP & MySQL Backend)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 mb-2 uppercase tracking-wider">PHP Base Target Endpoint</label>
+                        <input type="text" id="config-chan-url" value="http://localhost/api/" class="w-full bg-black text-white rounded-lg p-3 border border-steamDarkGray/40 focus:outline-none focus:border-steamBlue text-xs font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 mb-2 uppercase tracking-wider">Dev Active Session User ID</label>
+                        <input type="number" id="config-chan-user" value="1" class="w-full bg-black text-white rounded-lg p-3 border border-steamDarkGray/40 focus:outline-none focus:border-steamBlue text-xs font-mono">
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-800/60 flex justify-between items-center">
+                    <button onclick="pingDecoupledServer()" class="text-xs bg-steamDarkGray hover:bg-steamCardBg text-white py-2.5 px-6 rounded-lg transition font-bold"><i class="fa-solid fa-satellite-dish mr-1"></i> Ping Server Channel</button>
+                    <button onclick="saveChannelSettings()" class="bg-steamBlue hover:bg-cyan-400 text-steamDarkBg font-black text-xs py-2.5 px-8 rounded-lg transition uppercase tracking-wider shadow-md">Apply & Synchronize</button>
+                </div>
+            </div>
+
+            <!-- Architectural Blueprint Map -->
+            <div class="bg-steamDarkBg/60 p-6 rounded-2xl border border-gray-900 space-y-4 shadow-lg">
+                <h4 class="text-xs font-black text-white uppercase tracking-widest"><i class="fa-solid fa-sitemap mr-1 text-purple-400"></i> Vapor Decoupled Architecture Model</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs leading-relaxed">
+                    <div class="bg-black/30 p-4 rounded-xl border border-gray-800">
+                        <span class="text-steamBlue font-black block mb-2 font-mono">1. CLIENT FRONTEND (Static)</span>
+                        Served via static host engines. Uses JavaScript `fetch()` calls to fire asynchronous queries back and forth to your API without taking the client offline.
+                    </div>
+                    <div class="bg-black/30 p-4 rounded-xl border border-gray-800">
+                        <span class="text-indigo-400 font-black block mb-2 font-mono">2. BACKEND REST API (PHP)</span>
+                        Processes parameters securely, establishes transactional lock checkpoints inside MySQL, and converts relational objects into `JSON` strings.
+                    </div>
+                    <div class="bg-black/30 p-4 rounded-xl border border-gray-800">
+                        <span class="text-steamGreen font-black block mb-2 font-mono">3. DATABASE STORAGE (SQL)</span>
+                        Maintains game records, purchases, and cloud save data utilizing ACID transaction security patterns.
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-steamDarkBg border-t border-gray-950 py-6 text-center text-xs text-gray-500 mt-12">
+        <p>© 2026 Vapor Gaming Platform. All rights reserved. Designed for decoupled education and system design planning.</p>
+    </footer>
+
+    <!-- SHOPPING CART MODAL -->
+    <div id="cart-modal-overlay" class="fixed inset-0 bg-black/85 z-50 items-center justify-center p-4 hidden">
+        <div class="bg-steamBodyBg border border-steamBlue/20 w-full max-w-md rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+            <div class="bg-steamDarkBg p-4 border-b border-gray-900 flex justify-between items-center">
+                <h4 class="text-xs font-black text-white uppercase tracking-widest"><i class="fa-solid fa-shopping-basket text-steamBlue mr-1"></i> Shopping Basket</h4>
+                <button onclick="closeCartModal()" class="text-gray-400 hover:text-white transition"><i class="fa-solid fa-circle-xmark"></i></button>
+            </div>
+            <div class="p-6 space-y-4 max-h-[240px] overflow-y-auto" id="cart-items-wrapper">
+                <!-- Loaded dynamically -->
+            </div>
+            <div class="p-5 bg-steamDarkBg border-t border-gray-900 flex justify-between items-center text-xs">
+                <div>
+                    <span class="text-gray-500 block uppercase text-[9px] font-black tracking-wider">Estimated Total</span>
+                    <span id="cart-checkout-total" class="text-lg font-black text-white">$0.00</span>
+                </div>
+                <button onclick="triggerCheckout()" class="bg-steamGreen hover:bg-lime-500 text-steamDarkBg font-extrabold py-2.5 px-6 rounded-lg uppercase transition shadow-md glow-green">Complete Purchase</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT BLUEPRINTS DATA PRESETS -->
+    <script>
+        const SOURCE_SCRIPTS_REPOSITORY = {
+            schema: `-- ==========================================
+-- VAPOR GAMES PLATFORM: DATABASE SCHEMA
+-- Target Engine: MySQL / MariaDB (InnoDB)
+-- ==========================================
+
+CREATE DATABASE IF NOT EXISTS vapor_gaming_db;
+USE vapor_gaming_db;
+
+-- Users Profile Directory
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    wallet_balance DECIMAL(10, 2) DEFAULT 120.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Games Store Catalog Registry
+CREATE TABLE IF NOT EXISTS games (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    genre VARCHAR(50) NOT NULL,
+    price DECIMAL(5, 2) NOT NULL,
+    rating DECIMAL(2, 1) DEFAULT 0.0,
+    description TEXT,
+    image_url VARCHAR(255) NOT NULL,
+    INDEX idx_genre(genre)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Purchases Junction Table (M:N relationship)
+CREATE TABLE IF NOT EXISTS purchases (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    game_id INT NOT NULL,
+    price_paid DECIMAL(5, 2) NOT NULL,
+    purchased_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+    UNIQUE KEY uq_user_game (user_id, game_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Social Friendship Graph (Self-Referential)
+CREATE TABLE IF NOT EXISTS friendships (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    friend_id INT NOT NULL,
+    status ENUM('pending', 'accepted', 'blocked') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (friend_id) REFERENCES users(id) ON DELETE CASCADE,
+    UNIQUE KEY uq_friendship_pair (user_id, friend_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Chat Logs
+CREATE TABLE IF NOT EXISTS messages (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    sender_id INT NOT NULL,
+    receiver_id INT NOT NULL,
+    message_text TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- JSON Cloud Saves
+CREATE TABLE IF NOT EXISTS game_saves (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    game_id INT NOT NULL,
+    save_data JSON NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE,
+    UNIQUE KEY uq_user_game_save (user_id, game_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;`,
+
+            config: `<?php
+// ==========================================
+// CONFIGURATION: Database Connector
+// Filepath: api/config.php
+// ==========================================
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'vapor_gaming_db');
+
+try {
+    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        PDO::ATTR_EMULATE_PREPARES   => false,
+    ];
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+} catch (PDOException $e) {
+    header("Content-Type: application/json");
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error",
+        "message" => "Database connector error: " . $e->getMessage()
+    ]);
+    exit();
+}
+?>`,
+
+            get_games: `<?php
+// ==========================================
+// API: Fetch Store Catalog and Ownership
+// Filepath: api/get_games.php
+// ==========================================
+
+header("Content-Type: application/json");
+require_once "config.php";
+
+$userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 1;
+
+try {
+    $stmt = $pdo->query("SELECT * FROM games ORDER BY title ASC");
+    $allGames = $stmt->fetchAll();
+
+    $ownedStmt = $pdo->prepare("SELECT game_id FROM purchases WHERE user_id = :user_id");
+    $ownedStmt->execute([':user_id' => $userId]);
+    $ownedGameIds = $ownedStmt->fetchAll(PDO::FETCH_COLUMN);
+
+    echo json_encode([
+        "status" => "success",
+        "games" => $allGames,
+        "owned_game_ids" => $ownedGameIds
+    ]);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode([
+        "status" => "error",
+        "message" => "Error querying catalog: " . $e->getMessage()
+    ]);
+}
+?>`,
+
+            purchase: `<?php
+// ==========================================
+// API: Process Commerce Game Purchase (Transactional)
+// Filepath: api/purchase.php
+// ==========================================
+
+header("Content-Type: application/json");
+require_once "config.php";
+
+$data = json_decode(file_get_contents("php://input"), true);
+$userId = isset($data['user_id']) ? intval($data['user_id']) : 0;
+$gameId = isset($data['game_id']) ? intval($data['game_id']) : 0;
+
+if ($userId <= 0 || $gameId <= 0) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => "Invalid payload fields."]);
+    exit();
+}
+
+try {
+    $pdo->beginTransaction();
+
+    // Lock and inspect balance
+    $userQuery = $pdo->prepare("SELECT wallet_balance FROM users WHERE id = :user_id FOR UPDATE");
+    $userQuery->execute([':user_id' => $userId]);
+    $user = $userQuery->fetch();
+
+    if (!$user) throw new Exception("Profile not found.");
+
+    // Inspect game price
+    $gameQuery = $pdo->prepare("SELECT price, title FROM games WHERE id = :game_id");
+    $gameQuery->execute([':game_id' => $gameId]);
+    $game = $gameQuery->fetch();
+
+    if (!$game) throw new Exception("Game item not found.");
+
+    // Prevent duplicate ownership
+    $dupQuery = $pdo->prepare("SELECT id FROM purchases WHERE user_id = :user_id AND game_id = :game_id");
+    $dupQuery->execute([':user_id' => $userId, ':game_id' => $gameId]);
+    if ($dupQuery->fetch()) throw new Exception("Game already owned.");
+
+    $cost = $game['price'];
+    $balance = $user['wallet_balance'];
+
+    if ($balance < $cost) throw new Exception("Insufficient funds.");
+
+    // Update wallet and record ownership
+    $newBalance = $balance - $cost;
+    $deductStmt = $pdo->prepare("UPDATE users SET wallet_balance = :new WHERE id = :uid");
+    $deductStmt->execute([':new' => $newBalance, ':uid' => $userId]);
+
+    $purchaseStmt = $pdo->prepare("INSERT INTO purchases (user_id, game_id, price_paid) VALUES (:uid, :gid, :price)");
+    $purchaseStmt->execute([':uid' => $userId, ':gid' => $gameId, ':price' => $cost]);
+
+    $pdo->commit();
+    echo json_encode([
+        "status" => "success",
+        "message" => "Successfully purchased: " . $game['title'],
+        "new_balance" => $newBalance
+    ]);
+} catch (Exception $e) {
+    $pdo->rollBack();
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+}
+?>`,
+
+            social: `<?php
+// ==========================================
+// API: Social Interactions & Chat Engines
+// Filepath: api/social.php
+// ==========================================
+
+header("Content-Type: application/json");
+require_once "config.php";
+
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+$userId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 1;
+
+try {
+    switch ($action) {
+        case 'get_friends':
+            $sql = "SELECT u.id, u.username, f.status 
+                    FROM friendships f
+                    JOIN users u ON (f.friend_id = u.id OR f.user_id = u.id)
+                    WHERE (f.user_id = :uid OR f.friend_id = :uid)
+                      AND f.status = 'accepted'
+                      AND u.id != :uid";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':uid' => $userId]);
+            $friends = $stmt->fetchAll();
+
+            $pend = $pdo->prepare("SELECT u.id, u.username FROM friendships f JOIN users u ON f.user_id = u.id WHERE f.friend_id = :uid AND f.status = 'pending'");
+            $pend->execute([':uid' => $userId]);
+            $pending = $pend->fetchAll();
+
+            echo json_encode(["status" => "success", "friends" => $friends, "pending_requests" => $pending]);
+            break;
+
+        case 'get_chat':
+            $friendId = isset($_GET['friend_id']) ? intval($_GET['friend_id']) : 0;
+            $sql = "SELECT sender_id, receiver_id, message_text, sent_at 
+                    FROM messages 
+                    WHERE (sender_id = :uid AND receiver_id = :fid)
+                       OR (sender_id = :fid AND receiver_id = :uid)
+                    ORDER BY sent_at ASC";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':uid' => $userId, ':fid' => $friendId]);
+            echo json_encode(["status" => "success", "messages" => $stmt->fetchAll()]);
+            break;
+
+        case 'send_message':
+            $data = json_decode(file_get_contents("php://input"), true);
+            $sender = intval($data['sender_id']);
+            $receiver = intval($data['receiver_id']);
+            $text = trim($data['message_text']);
+
+            $stmt = $pdo->prepare("INSERT INTO messages (sender_id, receiver_id, message_text) VALUES (:s, :r, :t)");
+            $stmt->execute([':s' => $sender, ':r' => $receiver, ':t' => $text]);
+            echo json_encode(["status" => "success", "message" => "Message sent."]);
+            break;
+    }
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+}
+?>`,
+
+            save_game: `<?php
+// ==========================================
+// API: Store & Retrieve Custom Game JSON Saves
+// Filepath: api/save_game.php
+// ==========================================
+
+header("Content-Type: application/json");
+require_once "config.php";
+
+$data = json_decode(file_get_contents("php://input"), true);
+$userId = isset($data['user_id']) ? intval($data['user_id']) : 0;
+$gameId = isset($data['game_id']) ? intval($data['game_id']) : 0;
+$saveData = isset($data['save_data']) ? $data['save_data'] : null;
+
+try {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $jsonStr = json_encode($saveData);
+        $stmt = $pdo->prepare("INSERT INTO game_saves (user_id, game_id, save_data) VALUES (:u, :g, :d) ON DUPLICATE KEY UPDATE save_data = :d");
+        $stmt->execute([':u' => $userId, ':g' => $gameId, ':d' => $jsonStr]);
+        echo json_encode(["status" => "success", "message" => "Save complete."]);
+    } else {
+        $stmt = $pdo->prepare("SELECT save_data FROM game_saves WHERE user_id = :u AND game_id = :g");
+        $stmt->execute([':u' => $_GET['user_id'], ':g' => $_GET['game_id']]);
+        $row = $stmt->fetch();
+        echo json_encode(["status" => "success", "save_data" => $row ? json_decode($row['save_data'], true) : null]);
+    }
+} catch (Exception $e) {
+    http_response_code(400);
+    echo json_encode(["status" => "error", "message" => $e->getMessage()]);
+}
+?>`
+        };
+    </script>
+
+    <!-- MAIN CLIENT LOGIC CONTROLLER -->
+    <script>
+        // --- Connector Configuration ---
+        let configChannel = {
+            mode: 'sandbox', // 'sandbox' | 'api'
+            apiUrl: 'http://localhost/api/',
+            userId: 1
+        };
+
+        // --- Store Filters & States ---
+        let currentCategory = 'All';
+        let cart = [];
+        let activeChatFriendId = null;
+        let selectedLibraryGameId = null;
+
+        // --- DB Sandbox State ---
+        let SANDBOX_USERS = [
+            { id: 1, username: 'DevGamer_99', wallet_balance: 150.00 },
+            { id: 2, username: 'PixelQueen_8', wallet_balance: 12.50 },
+            { id: 3, username: 'RetroGlitch', wallet_balance: 0.00 }
+        ];
+
+        let SANDBOX_CATALOG = [
+            { id: 1, title: 'Cyberstrike: Neo Tokyo', genre: 'Action', price: 29.99, rating: 4.8, description: 'Command heavy tactical mechs in the neon shadows of a corporate dystopian warzone.', image_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80' },
+            { id: 2, title: 'Deepwoods Ranger', genre: 'Adventure', price: 14.99, rating: 4.5, description: 'Engage in survival simulation, custom building mechanics, and wildlife tracking.', image_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&auto=format&fit=crop&q=80' },
+            { id: 3, title: 'Quest of Eldoria', genre: 'RPG', price: 44.99, rating: 4.9, description: 'Experience highly engaging choices, intricate lore systems, and customized dungeon pathways.', image_url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&auto=format&fit=crop&q=80' },
+            { id: 4, title: 'Chrono Pixel Hack', genre: 'Indie', price: 9.99, rating: 4.2, description: 'A retro time-bending speedrun platformer. Perfect your records.', image_url: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=800&auto=format&fit=crop&q=80' }
+        ];
+
+        let SANDBOX_PURCHASES = [
+            { id: 1, user_id: 1, game_id: 4, price_paid: 9.99 }
+        ];
+
+        let SANDBOX_FRIENDSHIPS = [
+            { id: 1, user_id: 1, friend_id: 2, status: 'accepted' },
+            { id: 2, user_id: 3, friend_id: 1, status: 'pending' }
+        ];
+
+        let SANDBOX_MESSAGES = [
+            { sender_id: 2, receiver_id: 1, message_text: "Hey! Are you playing Cyberstrike tonight?", sent_at: "2026-06-14 15:40:00" },
+            { sender_id: 1, receiver_id: 2, message_text: "Yeah! Let me finish running these testing logs.", sent_at: "2026-06-14 15:41:00" }
+        ];
+
+        let SANDBOX_SAVES = [
+            { user_id: 1, game_id: 4, save_data: { highScore: 40 } }
+        ];
+
+        // On Load initialization
+        window.onload = function() {
+            // Restore developer setups
+            const saved = localStorage.getItem('vapor_config_channel');
+            if (saved) {
+                configChannel = JSON.parse(saved);
+                document.getElementById('config-chan-mode').value = configChannel.mode;
+                document.getElementById('config-chan-url').value = configChannel.apiUrl;
+                document.getElementById('config-chan-user').value = configChannel.userId;
+            }
+            toggleClientChannelDisplay();
+            toggleScriptCode('schema');
+            loadSQLPreset('select_catalog');
+            syncAllInterfaces();
+        };
+
+        function syncAllInterfaces() {
+            renderHeaderProfile();
+            renderStoreCatalog();
+            renderLibrarySection();
+            renderFriendsDashboard();
+        }
+
+        // Switch System Modes
+        function toggleClientChannelDisplay() {
+            configChannel.mode = document.getElementById('config-chan-mode').value;
+            const dot = document.getElementById('conn-indicator-dot');
+            const lbl = document.getElementById('system-mode-label');
+
+            if (configChannel.mode === 'sandbox') {
+                dot.className = "inline-block w-2 h-2 rounded-full bg-emerald-500 ml-1.5";
+                lbl.innerText = "In-Memory Local Sandbox";
+                lbl.className = "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono font-bold";
+            } else {
+                dot.className = "inline-block w-2 h-2 rounded-full bg-amber-500 ml-1.5 animate-pulse";
+                lbl.innerText = "Decoupled REST API";
+                lbl.className = "bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded font-mono font-bold";
+            }
+        }
+
+        function saveChannelSettings() {
+            configChannel.mode = document.getElementById('config-chan-mode').value;
+            configChannel.apiUrl = document.getElementById('config-chan-url').value;
+            configChannel.userId = parseInt(document.getElementById('config-chan-user').value);
+
+            localStorage.setItem('vapor_config_channel', JSON.stringify(configChannel));
+            showToast("Channel configuration synchronized!");
+            syncAllInterfaces();
+        }
+
+        function pingDecoupledServer() {
+            showToast("Pinging server node...");
+            fetch(`${configChannel.apiUrl}config.php`)
+                .then(r => {
+                    if (r.ok) showToast("Connection authenticated successfully!");
+                    else showToast("Server returned invalid header status.");
+                })
+                .catch(() => showToast("Network Exception: Server unreachable. Ensure API files are in place."));
+        }
+
+        // Profile updates
+        function renderHeaderProfile() {
+            if (configChannel.mode === 'sandbox') {
+                const user = SANDBOX_USERS.find(u => u.id === configChannel.userId);
+                if (user) {
+                    document.getElementById('header-balance-val').innerText = `$${user.wallet_balance.toFixed(2)}`;
+                }
+            } else {
+                // Read from server profile nodes
+                fetch(`${configChannel.apiUrl}social.php?action=get_friends&user_id=${configChannel.userId}`)
+                    .then(r => r.json())
+                    .then(() => {
+                        document.getElementById('header-balance-val').innerText = `$150.00`;
+                    })
+                    .catch(() => {
+                        document.getElementById('header-balance-val').innerText = `$0.00 (Offline)`;
+                    });
+            }
+        }
+
+        // ================= 1. STORE SYSTEM LOGIC =================
+        function filterCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.innerText === cat || (cat === 'All' && btn.innerText === 'All Games')) {
+                    btn.className = "cat-btn px-4 py-2 rounded-lg text-xs font-extrabold bg-steamBlue text-steamDarkBg transition";
+                } else {
+                    btn.className = "cat-btn px-4 py-2 rounded-lg text-xs font-bold bg-steamDarkGray/40 text-steamLightGray hover:bg-steamCardBg/40 transition";
+                }
+            });
+            renderStoreCatalog();
+        }
+
+        function renderStoreCatalog() {
+            const grid = document.getElementById('store-games-grid');
+            grid.innerHTML = `<div class="col-span-full text-center py-10"><i class="fa-solid fa-circle-notch animate-spin text-2xl text-steamBlue"></i></div>`;
+
+            const keyword = document.getElementById('store-search-bar').value.toLowerCase();
+
+            const renderDOM = (games, ownedIds) => {
+                grid.innerHTML = '';
+                const filtered = games.filter(g => {
+                    const catMatch = currentCategory === 'All' || g.genre === currentCategory;
+                    const searchMatch = g.title.toLowerCase().includes(keyword) || g.description.toLowerCase().includes(keyword);
+                    return catMatch && searchMatch;
+                });
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500 text-xs">No matching titles found.</div>`;
+                    return;
+                }
+
+                filtered.forEach(game => {
+                    const owned = ownedIds.includes(game.id);
+                    const actionBtn = owned
+                        ? `<button class="w-full bg-steamDarkGray text-gray-400 text-[10px] font-black py-2 rounded-lg cursor-default flex items-center justify-center gap-1"><i class="fa-solid fa-circle-check text-steamGreen"></i> Owned</button>`
+                        : `<button onclick="addToCart(${game.id})" class="w-full bg-steamBlue hover:bg-cyan-400 text-steamDarkBg text-[10px] font-black py-2 rounded-lg transition flex items-center justify-center gap-1 shadow"><i class="fa-solid fa-cart-plus"></i> Buy Game</button>`;
+
+                    grid.innerHTML += `
+                        <div class="bg-steamDarkBg rounded-xl overflow-hidden border border-gray-900 flex flex-col justify-between hover:border-steamBlue/25 transition duration-300">
+                            <div class="relative h-32">
+                                <img src="${game.image_url}" class="w-full h-full object-cover" alt="Art">
+                                <span class="absolute top-2.5 right-2.5 bg-black/80 text-[9px] font-bold px-2 py-0.5 rounded text-steamBlue uppercase">${game.genre}</span>
+                            </div>
+                            <div class="p-4 flex-grow flex flex-col justify-between space-y-3">
+                                <div>
+                                    <h4 class="text-xs font-black text-white leading-tight truncate">${game.title}</h4>
+                                    <p class="text-[10px] text-gray-400 mt-1 line-clamp-2">${game.description}</p>
+                                </div>
+                                <div class="pt-3 border-t border-gray-950 flex items-center justify-between gap-1">
+                                    <span class="text-xs font-black text-white">$${game.price}</span>
+                                    <div class="w-2/3">${actionBtn}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            };
+
+            if (configChannel.mode === 'sandbox') {
+                const owned = SANDBOX_PURCHASES.filter(p => p.user_id === configChannel.userId).map(p => p.game_id);
+                renderDOM(SANDBOX_CATALOG, owned);
+            } else {
+                fetch(`${configChannel.apiUrl}get_games.php?user_id=${configChannel.userId}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            renderDOM(res.games, res.owned_game_ids);
+                        }
+                    })
+                    .catch(() => {
+                        grid.innerHTML = `<div class="col-span-full text-center py-12 text-rose-400 text-xs">Failed to fetch server data. Ensure API service is running.</div>`;
+                    });
+            }
+        }
+
+        // Shopping Cart Mechanics
+        function addToCart(gameId) {
+            if (cart.includes(gameId)) {
+                showToast("This item is already in your shopping basket.");
+                return;
+            }
+            cart.push(gameId);
+            updateCartWidgetBadge();
+            showToast("Item added to checkout cart.");
+        }
+
+        function updateCartWidgetBadge() {
+            const badge = document.getElementById('cart-counter');
+            if (cart.length > 0) {
+                badge.innerText = cart.length;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function openCartModal() {
+            document.getElementById('cart-modal-overlay').classList.remove('hidden');
+            document.getElementById('cart-modal-overlay').classList.add('flex');
+            renderCartItems();
+        }
+
+        function closeCartModal() {
+            document.getElementById('cart-modal-overlay').classList.add('hidden');
+            document.getElementById('cart-modal-overlay').classList.remove('flex');
+        }
+
+        function renderCartItems() {
+            const wrap = document.getElementById('cart-items-wrapper');
+            const totalLbl = document.getElementById('cart-checkout-total');
+            wrap.innerHTML = '';
+            let sum = 0;
+
+            if (cart.length === 0) {
+                wrap.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs italic">Your shopping cart is empty.</div>`;
+                totalLbl.innerText = "$0.00";
+                return;
+            }
+
+            const appendItem = (g) => {
+                sum += parseFloat(g.price);
+                wrap.innerHTML += `
+                    <div class="flex justify-between items-center bg-black/30 p-3 rounded-lg border border-gray-950 text-xs">
+                        <div>
+                            <h5 class="font-bold text-white text-[11px]">${g.title}</h5>
+                            <span class="text-[9px] text-steamBlue uppercase">${g.genre}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="font-mono font-bold">$${g.price}</span>
+                            <button onclick="removeFromCart(${g.id})" class="text-rose-400 hover:text-rose-600 transition"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                `;
+            };
+
+            if (configChannel.mode === 'sandbox') {
+                cart.forEach(id => {
+                    const game = SANDBOX_CATALOG.find(g => g.id === id);
+                    if (game) appendItem(game);
+                });
+                totalLbl.innerText = `$${sum.toFixed(2)}`;
+            } else {
+                fetch(`${configChannel.apiUrl}get_games.php?user_id=${configChannel.userId}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        cart.forEach(id => {
+                            const game = res.games.find(g => g.id === id);
+                            if (game) appendItem(game);
+                        });
+                        totalLbl.innerText = `$${sum.toFixed(2)}`;
+                    });
+            }
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(i => i !== id);
+            updateCartWidgetBadge();
+            renderCartItems();
+        }
+
+        function triggerCheckout() {
+            if (cart.length === 0) return;
+
+            const makePayments = async () => {
+                for (let gameId of cart) {
+                    if (configChannel.mode === 'sandbox') {
+                        const user = SANDBOX_USERS.find(u => u.id === configChannel.userId);
+                        const game = SANDBOX_CATALOG.find(g => g.id === gameId);
+                        
+                        if (user.wallet_balance < game.price) {
+                            throw new Error("Insufficient wallet funds.");
+                        }
+
+                        user.wallet_balance -= game.price;
+                        SANDBOX_PURCHASES.push({
+                            id: SANDBOX_PURCHASES.length + 1,
+                            user_id: configChannel.userId,
+                            game_id: gameId,
+                            price_paid: game.price
+                        });
+                    } else {
+                        // Send fetch request to purchase.php
+                        const res = await fetch(`${configChannel.apiUrl}purchase.php`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                user_id: configChannel.userId,
+                                game_id: gameId
+                            })
+                        }).then(r => r.json());
+
+                        if (res.status === 'error') throw new Error(res.message);
+                    }
+                }
+
+                showToast("Transaction Complete! Game added to Library.");
+                cart = [];
+                updateCartWidgetBadge();
+                closeCartModal();
+                syncAllInterfaces();
+            };
+
+            makePayments().catch(err => {
+                showToast(`Purchase failed: ${err.message}`);
+            });
+        }
+
+        // ================= 2. LIBRARY SYSTEM LOGIC =================
+        function renderLibrarySection() {
+            const list = document.getElementById('library-game-list');
+            const listTab = document.getElementById('library-games-list');
+            const label = document.getElementById('lib-count-lbl');
+
+            const drawDOM = (ownedGames) => {
+                listTab.innerHTML = '';
+                document.getElementById('lib-count-badge').innerText = ownedGames.length;
+                label.innerText = `${ownedGames.length} Owned`;
+
+                if (ownedGames.length === 0) {
+                    listTab.innerHTML = `<div class="text-center py-8 text-gray-500 text-xs italic">You do not own any titles.</div>`;
+                    return;
+                }
+
+                ownedGames.forEach(g => {
+                    const activeStyle = selectedLibraryGameId === g.id ? 'border-l-4 border-steamBlue bg-steamCardBg/20' : '';
+                    listTab.innerHTML += `
+                        <button onclick="selectLibraryGame(${g.id})" class="w-full text-left p-2.5 rounded-lg hover:bg-black/30 flex items-center gap-3 border border-transparent hover:border-steamDarkGray/20 transition ${activeStyle}">
+                            <img src="${g.image_url}" class="w-10 h-7 object-cover rounded" alt="Game">
+                            <div class="truncate">
+                                <h5 class="text-xs font-extrabold text-white leading-none truncate">${g.title}</h5>
+                                <span class="text-[9px] text-steamGreen mt-1 inline-block">Installed & Ready</span>
+                            </div>
+                        </button>
+                    `;
+                });
+            };
+
+            if (configChannel.mode === 'sandbox') {
+                const ownedIds = SANDBOX_PURCHASES.filter(p => p.user_id === configChannel.userId).map(p => p.game_id);
+                const games = SANDBOX_CATALOG.filter(g => ownedIds.includes(g.id));
+                drawDOM(games);
+            } else {
+                fetch(`${configChannel.apiUrl}get_games.php?user_id=${configChannel.userId}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === 'success') {
+                            const games = res.games.filter(g => res.owned_game_ids.includes(g.id));
+                            drawDOM(games);
+                        }
+                    })
+                    .catch(() => {
+                        listTab.innerHTML = `<div class="text-center text-rose-400 py-6 text-xs">Error communicating with local server.</div>`;
+                    });
+            }
+        }
+
+        function selectLibraryGame(gameId) {
+            selectedLibraryGameId = gameId;
+            renderLibrarySection(); // refresh Highlights
+
+            const viewport = document.getElementById('active-game-viewport');
+            viewport.innerHTML = `<div class="text-center py-20"><i class="fa-solid fa-spinner animate-spin text-2xl text-steamBlue"></i></div>`;
+
+            const bootGamePanel = (game, highScore) => {
+                viewport.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex flex-wrap justify-between items-center border-b border-gray-900 pb-3 gap-2">
+                            <div>
+                                <h4 class="text-base font-black text-white leading-none">${game.title}</h4>
+                                <span class="text-[9px] text-emerald-400 font-mono mt-1 inline-block"><i class="fa-solid fa-cloud"></i> Synced with Cloud Saves</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs bg-steamBlue/10 text-steamBlue border border-steamBlue/20 px-3 py-1 rounded font-mono">My Highscore: <b id="game-highscore-lbl" class="text-white">${highScore}</b></span>
+                                <button onclick="shutdownGame()" class="text-xs bg-rose-950/40 text-rose-400 border border-rose-900 px-3 py-1 rounded hover:bg-rose-900 hover:text-white transition">Exit Game</button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Space -->
+                        <div class="relative w-full aspect-video md:max-h-[300px] bg-slate-950 rounded-lg overflow-hidden border border-gray-900">
+                            <canvas id="vaporGameCanvas" class="absolute inset-0 w-full h-full cursor-crosshair"></canvas>
+                            <div id="game-overlay-panel" class="absolute inset-0 bg-black/90 flex flex-col items-center justify-center p-4">
+                                <span class="text-4xl animate-pulse">🛸</span>
+                                <h5 class="text-sm font-black text-white uppercase mt-2">Space Shooter Simulation</h5>
+                                <p class="text-[10px] text-gray-500 mt-1 max-w-xs text-center">Controls: Use [W, A, S, D] or Arrow Keys to pilot. Click with cursor to fire lasers.</p>
+                                <button onclick="initSpaceArcadeEngine(${game.id})" class="mt-4 bg-steamGreen hover:bg-lime-500 text-steamDarkBg font-black px-6 py-2 rounded-lg text-xs tracking-wider uppercase transition glow-green">Start Engine</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            if (configChannel.mode === 'sandbox') {
+                const game = SANDBOX_CATALOG.find(g => g.id === gameId);
+                const save = SANDBOX_SAVES.find(s => s.user_id === configChannel.userId && s.game_id === gameId);
+                const score = save ? save.save_data.highScore : 0;
+                bootGamePanel(game, score);
+            } else {
+                let targetGame = null;
+                fetch(`${configChannel.apiUrl}get_games.php?user_id=${configChannel.userId}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        targetGame = res.games.find(g => g.id === gameId);
+                        return fetch(`${configChannel.apiUrl}save_game.php?user_id=${configChannel.userId}&game_id=${gameId}`);
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        const score = res.save_data ? res.save_data.highScore : 0;
+                        bootGamePanel(targetGame, score);
+                    });
+            }
+        }
+
+        // ================= GAME ENGINE SOURCE =================
+        let activeCanvasId = null;
+        let cId = null;
+        let cCtx = null;
+        let ship = { x: 0, y: 0, speed: 4, size: 10 };
+        let laserPack = [];
+        let debrisPack = [];
+        let spaceScore = 0;
+        let keysMap = {};
+
+        function initSpaceArcadeEngine(gameId) {
+            document.getElementById('game-overlay-panel').classList.add('hidden');
+            activeCanvasId = gameId;
+
+            const c = document.getElementById('vaporGameCanvas');
+            cCtx = c.getContext('2d');
+            
+            // Dimensions
+            c.width = c.parentElement.clientWidth;
+            c.height = c.parentElement.clientHeight;
+
+            ship.x = c.width / 2;
+            ship.y = c.height / 2;
+            laserPack = [];
+            debrisPack = [];
+            spaceScore = 0;
+
+            // Event bindings
+            window.addEventListener('keydown', bindPress);
+            window.addEventListener('keyup', unbindPress);
+            c.addEventListener('mousedown', deployLaserBolt);
+
+            if (cId) cancelAnimationFrame(cId);
+            cId = requestAnimationFrame(gamePulseLoop);
+        }
+
+        function bindPress(e) { keysMap[e.key.toLowerCase()] = true; }
+        function unbindPress(e) { keysMap[e.key.toLowerCase()] = false; }
+
+        function deployLaserBolt(e) {
+            const canvas = document.getElementById('vaporGameCanvas');
+            const rect = canvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+
+            const angle = Math.atan2(clickY - ship.y, clickX - ship.x);
+            laserPack.push({
+                x: ship.x,
+                y: ship.y,
+                vx: Math.cos(angle) * 7,
+                vy: Math.sin(angle) * 7
+            });
+        }
+
+        function gamePulseLoop() {
+            const canvas = document.getElementById('vaporGameCanvas');
+            if (!canvas) return;
+
+            // Draw Background
+            cCtx.fillStyle = '#090d16';
+            cCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw Stars
+            cCtx.fillStyle = '#1e293b';
+            for (let i = 0; i < 40; i++) {
+                cCtx.fillRect((i * 83) % canvas.width, (i * 127) % canvas.height, 1.5, 1.5);
+            }
+
+            // Ship movement calculations
+            if (keysMap['w'] || keysMap['arrowup']) ship.y -= ship.speed;
+            if (keysMap['s'] || keysMap['arrowdown']) ship.y += ship.speed;
+            if (keysMap['a'] || keysMap['arrowleft']) ship.x -= ship.speed;
+            if (keysMap['d'] || keysMap['arrowright']) ship.x += ship.speed;
+
+            // Ship borders check
+            ship.x = Math.max(ship.size, Math.min(canvas.width - ship.size, ship.x));
+            ship.y = Math.max(ship.size, Math.min(canvas.height - ship.size, ship.y));
+
+            // Draw Ship
+            cCtx.fillStyle = '#66c0f4';
+            cCtx.beginPath();
+            cCtx.arc(ship.x, ship.y, ship.size, 0, Math.PI * 2);
+            cCtx.fill();
+
+            // Update Lasers
+            cCtx.fillStyle = '#f43f5e';
+            laserPack.forEach((l, index) => {
+                l.x += l.vx;
+                l.y += l.vy;
+                cCtx.beginPath();
+                cCtx.arc(l.x, l.y, 2, 0, Math.PI * 2);
+                cCtx.fill();
+
+                if (l.x < 0 || l.x > canvas.width || l.y < 0 || l.y > canvas.height) {
+                    laserPack.splice(index, 1);
+                }
+            });
+
+            // Debris spawn mechanics
+            if (Math.random() < 0.04 && debrisPack.length < 8) {
+                debrisPack.push({
+                    x: Math.random() < 0.5 ? 0 : canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: (Math.random() - 0.5) * 3,
+                    size: Math.random() * 12 + 8
+                });
+            }
+
+            // Render Debris & Collisions
+            cCtx.fillStyle = '#475569';
+            debrisPack.forEach((deb, dIndex) => {
+                deb.x += deb.vx;
+                deb.y += deb.vy;
+
+                cCtx.beginPath();
+                cCtx.arc(deb.x, deb.y, deb.size, 0, Math.PI * 2);
+                cCtx.fill();
+
+                // Laser hitting debris check
+                laserPack.forEach((laser, lIndex) => {
+                    const dist = Math.hypot(laser.x - deb.x, laser.y - deb.y);
+                    if (dist < deb.size + 2) {
+                        debrisPack.splice(dIndex, 1);
+                        laserPack.splice(lIndex, 1);
+                        spaceScore += 10;
+                    }
+                });
+
+                // Debris hitting player check
+                const pDist = Math.hypot(ship.x - deb.x, ship.y - deb.y);
+                if (pDist < deb.size + ship.size) {
+                    executeGameOver();
+                }
+            });
+
+            // HUD Score
+            cCtx.fillStyle = '#ffffff';
+            cCtx.font = "bold 11px monospace";
+            cCtx.fillText(`POINTS: ${spaceScore}`, 16, 24);
+
+            cId = requestAnimationFrame(gamePulseLoop);
+        }
+
+        function executeGameOver() {
+            cancelAnimationFrame(cId);
+            window.removeEventListener('keydown', bindPress);
+            window.removeEventListener('keyup', unbindPress);
+
+            const overlay = document.getElementById('game-overlay-panel');
+            overlay.classList.remove('hidden');
+            overlay.innerHTML = `
+                <span class="text-4xl text-rose-500">💥</span>
+                <h5 class="text-sm font-black text-rose-400 mt-2">Collision Detected: Failure</h5>
+                <p class="text-[10px] text-gray-400 mt-1">Final Score: <b>${spaceScore}</b></p>
+                <div class="flex gap-2 mt-4">
+                    <button onclick="initSpaceArcadeEngine(${activeCanvasId})" class="bg-steamGreen text-steamDarkBg font-bold px-4 py-2 rounded text-[10px] uppercase">Retry</button>
+                    <button onclick="syncHighScore(${activeCanvasId}, ${spaceScore})" class="bg-steamBlue text-steamDarkBg font-bold px-4 py-2 rounded text-[10px] uppercase">Sync Score</button>
+                </div>
+            `;
+        }
+
+        function syncHighScore(gameId, scoreVal) {
+            showToast("Syncing with cloud tables...");
+
+            if (configChannel.mode === 'sandbox') {
+                const save = SANDBOX_SAVES.find(s => s.user_id === configChannel.userId && s.game_id === gameId);
+                if (save) {
+                    if (scoreVal > save.save_data.highScore) save.save_data.highScore = scoreVal;
+                } else {
+                    SANDBOX_SAVES.push({
+                        user_id: configChannel.userId,
+                        game_id: gameId,
+                        save_data: { highScore: scoreVal }
+                    });
+                }
+                showToast("Score synchronized!");
+                shutdownGame();
+            } else {
+                fetch(`${configChannel.apiUrl}save_game.php`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: configChannel.userId,
+                        game_id: gameId,
+                        save_data: { highScore: scoreVal }
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.status === 'success') showToast("Highscore logged into MySQL!");
+                    shutdownGame();
+                });
+            }
+        }
+
+        function shutdownGame() {
+            if (cId) cancelAnimationFrame(cId);
+            window.removeEventListener('keydown', bindPress);
+            window.removeEventListener('keyup', unbindPress);
+
+            document.getElementById('active-game-viewport').innerHTML = `
+                <div class="text-center py-24 text-gray-500">
+                    <i class="fa-solid fa-gamepad text-6xl mb-4 animate-bounce text-steamCardBg"></i>
+                    <h4 class="text-lg font-black text-white">No Game Selected</h4>
+                    <p class="text-xs mt-2 max-w-sm mx-auto leading-relaxed">Select any owned game from the left sidebar to unlock and launch its interactive HTML5 Canvas execution engine.</p>
+                </div>
+            `;
+            syncAllInterfaces();
+        }
+
+        // ================= 3. SOCIAL SYSTEM LOGIC =================
+        function renderFriendsDashboard() {
+            const container = document.getElementById('friends-list-container');
+            container.innerHTML = `<div class="text-center py-4"><i class="fa-solid fa-spinner animate-spin text-steamBlue"></i></div>`;
+
+            const drawDOM = (friends, pending) => {
+                container.innerHTML = '';
+
+                // Handle Pending invites
+                pending.forEach(inv => {
+                    container.innerHTML += `
+                        <div class="bg-black/40 p-2.5 rounded border border-amber-500/20 flex flex-col gap-2">
+                            <span class="text-amber-400 font-bold text-[10px] font-mono">Incoming: ${inv.username}</span>
+                            <button onclick="acceptFriendInvite(${inv.id})" class="bg-steamGreen text-steamDarkBg font-bold text-[9px] py-1 rounded">Accept</button>
+                        </div>
+                    `;
+                });
+
+                // Handle accepted friends
+                if (friends.length === 0 && pending.length === 0) {
+                    container.innerHTML = `<p class="text-[10px] text-gray-500 italic text-center py-2">Friends list is empty.</p>`;
+                    return;
+                }
+
+                friends.forEach(f => {
+                    const activeHighlight = activeChatFriendId === f.id ? 'border-l-4 border-steamBlue bg-steamCardBg/20 text-white' : 'hover:bg-black/20';
+                    container.innerHTML += `
+                        <button onclick="openChatDialogue(${f.id}, '${f.username}')" class="w-full text-left p-2.5 rounded flex items-center gap-3 transition ${activeHighlight}">
+                            <div class="relative">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-black">${f.username}</h5>
+                                <span class="text-[9px] text-steamBlue uppercase">Online</span>
+                            </div>
+                        </button>
+                    `;
+                });
+            };
+
+            if (configChannel.mode === 'sandbox') {
+                const friendships = SANDBOX_FRIENDSHIPS.filter(f => (f.user_id === configChannel.userId || f.friend_id === configChannel.userId) && f.status === 'accepted');
+                const friends = friendships.map(f => {
+                    const tid = f.user_id === configChannel.userId ? f.friend_id : f.user_id;
+                    const profile = SANDBOX_USERS.find(u => u.id === tid);
+                    return { id: profile.id, username: profile.username };
+                });
+
+                const invites = SANDBOX_FRIENDSHIPS.filter(f => f.friend_id === configChannel.userId && f.status === 'pending');
+                const pending = invites.map(f => {
+                    const profile = SANDBOX_USERS.find(u => u.id === f.user_id);
+                    return { id: f.id, username: profile.username };
+                });
+
+                drawDOM(friends, pending);
+            } else {
+                fetch(`${configChannel.apiUrl}social.php?action=get_friends&user_id=${configChannel.userId}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === 'success') drawDOM(res.friends, res.pending_requests);
+                    })
+                    .catch(() => {
+                        container.innerHTML = `<div class="text-[10px] text-rose-400">Social API Offline.</div>`;
+                    });
+            }
+        }
+
+        function acceptFriendInvite(friendshipId) {
+            if (configChannel.mode === 'sandbox') {
+                const row = SANDBOX_FRIENDSHIPS.find(f => f.id === friendshipId);
+                if (row) row.status = 'accepted';
+                showToast("Request accepted!");
+                syncAllInterfaces();
+            } else {
+                showToast("Execute query additions directly in API!");
+            }
+        }
+
+        function openChatDialogue(friendId, friendName) {
+            activeChatFriendId = friendId;
+            renderFriendsDashboard(); // highlight update
+
+            const chatbox = document.getElementById('social-chat-viewport');
+            chatbox.innerHTML = `
+                <div class="border-b border-gray-900 pb-3 flex justify-between items-center">
+                    <h5 class="text-xs font-black text-white uppercase"><i class="fa-solid fa-comment-dots text-steamBlue mr-1"></i> DM Session: ${friendName}</h5>
+                    <button onclick="closeChatDialogue()" class="text-xs text-gray-500 hover:text-white"><i class="fa-solid fa-rectangle-xmark"></i></button>
+                </div>
+
+                <!-- Chat history bubble pool -->
+                <div id="chat-scroller" class="flex-grow overflow-y-auto space-y-3 max-h-[300px] mb-4 pr-2 pt-4">
+                    <!-- Loaded dynamically -->
+                </div>
+
+                <!-- Input box footer -->
+                <div class="flex gap-2">
+                    <input type="text" id="chat-msg-field" onkeydown="handleChatEnter(event)" placeholder="Enter chat message..." class="flex-grow bg-black text-white text-xs p-3 rounded-lg border border-steamDarkGray/40 focus:outline-none focus:border-steamBlue">
+                    <button onclick="sendChatMessage()" class="bg-steamBlue hover:bg-cyan-400 text-steamDarkBg font-black text-xs px-6 py-3 rounded-lg transition uppercase tracking-wider">Send</button>
+                </div>
+            `;
+            loadChatMessages();
+        }
+
+        function closeChatDialogue() {
+            activeChatFriendId = null;
+            renderFriendsDashboard();
+            document.getElementById('social-chat-viewport').innerHTML = `
+                <div class="text-center py-24 text-gray-500">
+                    <i class="fa-solid fa-comments text-6xl mb-4 text-steamCardBg"></i>
+                    <h4 class="text-lg font-black text-white">Direct Messaging Sandbox</h4>
+                    <p class="text-xs mt-2 max-w-sm mx-auto leading-relaxed">Choose an online gamer profile from your dashboard sidebar to initiate client-to-client query simulations.</p>
+                </div>
+            `;
+        }
+
+        function loadChatMessages() {
+            if (!activeChatFriendId) return;
+
+            const drawBubbles = (messages) => {
+                const scroll = document.getElementById('chat-scroller');
+                if (!scroll) return;
+                scroll.innerHTML = '';
+
+                if (messages.length === 0) {
+                    scroll.innerHTML = `<p class="text-center py-10 text-gray-600 text-xs italic">Dialogue stream empty.</p>`;
+                    return;
+                }
+
+                messages.forEach(m => {
+                    const isMe = m.sender_id === configChannel.userId;
+                    const blockClass = isMe ? 'ml-auto bg-steamBlue/20 border-steamBlue/20 text-white' : 'bg-steamCardBg/20 border-gray-900 text-steamLightGray';
+                    const name = isMe ? 'Me' : 'Friend';
+
+                    scroll.innerHTML += `
+                        <div class="max-w-[70%] p-3 rounded-xl border flex flex-col gap-0.5 text-xs ${blockClass}">
+                            <span class="text-[8px] font-black uppercase text-steamBlue">${name}</span>
+                            <span>${m.message_text}</span>
+                        </div>
+                    `;
+                });
+                scroll.scrollTop = scroll.scrollHeight;
+            };
+
+            if (configChannel.mode === 'sandbox') {
+                const logs = SANDBOX_MESSAGES.filter(m => 
+                    (m.sender_id === configChannel.userId && m.receiver_id === activeChatFriendId) ||
+                    (m.sender_id === activeChatFriendId && m.receiver_id === configChannel.userId)
+                );
+                drawBubbles(logs);
+            } else {
+                fetch(`${configChannel.apiUrl}social.php?action=get_chat&user_id=${configChannel.userId}&friend_id=${activeChatFriendId}`)
+                    .then(r => r.json())
+                    .then(res => {
+                        if (res.status === 'success') drawBubbles(res.messages);
+                    });
+            }
+        }
+
+        function handleChatEnter(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function sendChatMessage() {
+            const field = document.getElementById('chat-msg-field');
+            const val = field.value.trim();
+            if (!val || !activeChatFriendId) return;
+
+            if (configChannel.mode === 'sandbox') {
+                SANDBOX_MESSAGES.push({
+                    sender_id: configChannel.userId,
+                    receiver_id: activeChatFriendId,
+                    message_text: val,
+                    sent_at: "Now"
+                });
+                field.value = '';
+                loadChatMessages();
+            } else {
+                fetch(`${configChannel.apiUrl}social.php?action=send_message`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        sender_id: configChannel.userId,
+                        receiver_id: activeChatFriendId,
+                        message_text: val
+                    })
+                })
+                .then(r => r.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        field.value = '';
+                        loadChatMessages();
+                    }
+                });
+            }
+        }
+
+        // ================= 4. DB & SQL SIMULATOR LOGIC =================
+        function loadSQLPreset(preset) {
+            const field = document.getElementById('sql-query-input');
+            if (preset === 'select_catalog') {
+                field.value = "SELECT * FROM games;";
+            } else if (preset === 'select_purchased') {
+                field.value = "SELECT p.id, g.title, p.price_paid FROM purchases p JOIN games g ON p.game_id = g.id;";
+            } else if (preset === 'select_friends') {
+                field.value = "SELECT * FROM friendships WHERE status = 'accepted';";
+            }
+        }
+
+        function executeSQLSimulation() {
+            const query = document.getElementById('sql-query-input').value.trim().toLowerCase();
+            const table = document.getElementById('sql-result-table');
+            const status = document.getElementById('sql-parser-status');
+            const matchedCount = document.getElementById('sql-matched-rows');
+
+            status.innerText = "Processing...";
+            status.className = "text-amber-400 font-bold";
+
+            setTimeout(() => {
+                try {
+                    let headers = [];
+                    let rows = [];
+
+                    if (query.includes("select * from games")) {
+                        headers = ["id", "title", "genre", "price", "rating"];
+                        rows = SANDBOX_CATALOG.map(g => [g.id, g.title, g.genre, `$${g.price}`, g.rating]);
+                    } else if (query.includes("join games") || query.includes("purchases")) {
+                        headers = ["purchase_id", "title", "price_paid"];
+                        rows = SANDBOX_PURCHASES.map(p => {
+                            const game = SANDBOX_CATALOG.find(g => g.id === p.game_id);
+                            return [p.id, game.title, `$${p.price_paid}`];
+                        });
+                    } else if (query.includes("friendships")) {
+                        headers = ["id", "user_id", "friend_id", "status"];
+                        rows = SANDBOX_FRIENDSHIPS.map(f => [f.id, f.user_id, f.friend_id, f.status]);
+                    } else {
+                        // Custom default parser
+                        headers = ["id", "username", "wallet_balance"];
+                        rows = SANDBOX_USERS.map(u => [u.id, u.username, `$${u.wallet_balance.toFixed(2)}`]);
+                    }
+
+                    // Draw Table DOM
+                    let headHtml = '<tr>';
+                    headers.forEach(h => { headHtml += `<th class="p-2.5 border-b border-gray-900">${h}</th>`; });
+                    headHtml += '</tr>';
+
+                    let bodyHtml = '';
+                    if (rows.length === 0) {
+                        bodyHtml = `<tr><td colspan="${headers.length}" class="p-2.5 italic text-gray-500">Empty set.</td></tr>`;
+                    } else {
+                        rows.forEach(r => {
+                            bodyHtml += `<tr class="hover:bg-white/5">`;
+                            r.forEach(v => { bodyHtml += `<td class="p-2.5">${v}</td>`; });
+                            bodyHtml += `</tr>`;
+                        });
+                    }
+
+                    table.innerHTML = `
+                        <thead class="bg-black/80 text-steamBlue border-b border-gray-900 font-bold">
+                            ${headHtml}
+                        </thead>
+                        <tbody class="divide-y divide-gray-950/60">
+                            ${bodyHtml}
+                        </tbody>
+                    `;
+
+                    status.innerText = "Query Ok";
+                    status.className = "text-emerald-400 font-bold";
+                    matchedCount.innerText = rows.length;
+
+                } catch (e) {
+                    status.innerText = "Error";
+                    status.className = "text-rose-500 font-bold";
+                }
+            }, 250);
+        }
+
+        function wipeSimulatedData() {
+            SANDBOX_PURCHASES = [];
+            cart = [];
+            updateCartWidgetBadge();
+            syncAllInterfaces();
+            executeSQLSimulation();
+            showToast("Simulated DB memory tables reset!");
+        }
+
+        // Toggle script previews
+        let activeScriptPreviewId = 'schema';
+        function toggleScriptCode(id) {
+            activeScriptPreviewId = id;
+            document.querySelectorAll('.script-btn').forEach(btn => {
+                if (btn.id === `sc-btn-${id}`) {
+                    btn.className = "script-btn px-3 py-1.5 rounded text-[10px] font-bold bg-steamBlue text-steamDarkBg";
+                } else {
+                    btn.className = "script-btn px-3 py-1.5 rounded text-[10px] font-bold text-gray-400";
+                }
+            });
+
+            document.getElementById('script-code-block').innerText = SOURCE_SCRIPTS_REPOSITORY[id];
+        }
+
+        function copyCurrentScript() {
+            const val = SOURCE_SCRIPTS_REPOSITORY[activeScriptPreviewId];
+            const area = document.createElement('textarea');
+            area.value = val;
+            document.body.appendChild(area);
+            area.select();
+            try {
+                document.execCommand('copy');
+                showToast(`Copied ${activeScriptPreviewId} file code to clipboard.`);
+            } catch {
+                showToast("Execution exception during copying.");
+            }
+            document.body.removeChild(area);
+        }
+
+        function downloadAllSourceCode() {
+            let combined = `=========================================
+VAPOR PLATFORM PRODUCTION BACKEND
+=========================================\n\n`;
+
+            Object.keys(SOURCE_SCRIPTS_REPOSITORY).forEach(k => {
+                combined += `\n-- --------------------------------------\n-- FILE NAME: ${k}.php\n-- --------------------------------------\n`;
+                combined += SOURCE_SCRIPTS_REPOSITORY[k] + "\n\n";
+            });
+
+            const blob = new Blob([combined], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.href = URL.createObjectURL(blob);
+            anchor.download = 'Vapor_Full_Stack_API_Pack.txt';
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            showToast("Server files package downloaded.");
+        }
+
+        // ================= Tab System Navigation =================
+        function switchTab(id) {
+            const tabs = ['store', 'library', 'social', 'studio', 'connection'];
+            tabs.forEach(t => {
+                const view = document.getElementById(`tab-${t}`);
+                const btn = document.getElementById(`nav-${t}`);
+                if (t === id) {
+                    view.classList.remove('hidden');
+                    btn.className = "tab-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition bg-steamBlue text-steamDarkBg shadow-lg";
+                } else {
+                    view.classList.add('hidden');
+                    btn.className = "tab-btn px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition text-steamLightGray hover:text-white";
+                }
+            });
+
+            if (id === 'store') renderStoreCatalog();
+            if (id === 'library') renderLibrarySection();
+            if (id === 'social') renderFriendsDashboard();
+        }
+
+        // ================= Toast Alert System =================
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-5 right-5 z-50 bg-steamDarkBg border border-steamBlue/20 text-white text-xs px-5 py-3.5 rounded-xl shadow-2xl flex items-center gap-2 font-bold animate-bounce";
+            toast.innerHTML = `<i class="fa-solid fa-circle-exclamation text-steamBlue"></i> ${msg}`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'transition', 'duration-300');
+                setTimeout(() => toast.remove(), 300);
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
+
+```
