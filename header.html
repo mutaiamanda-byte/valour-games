@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vapor Platform Edition</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Setting up our custom theme colors so we can use them in classes
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        steamDarkBg: '#171a21',
+                        steamBodyBg: '#1b2838',
+                        steamCardBg: '#2a475e',
+                        steamBlue: '#66c0f4',
+                        steamGreen: '#a3cf06',
+                        steamLightGray: '#c7d5e0',
+                        steamDarkGray: '#3d4450'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-steamBodyBg text-white font-sans antialiased">
+
+    <header class="bg-steamDarkBg border-b border-gray-800 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
+            
+            <div class="flex items-center gap-2">
+                <div class="bg-steamBlue p-2 rounded-lg text-steamDarkBg">
+                    <i class="fa-brands fa-steam text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white tracking-wider">VAPOR</h1>
+                    <span class="text-[10px] text-steamBlue uppercase block">Platform Edition</span>
+                </div>
+            </div>
+
+            <nav class="flex flex-wrap gap-2 bg-black/30 p-1.5 rounded-lg">
+                <button onclick="switchTab('store')" id="nav-store" class="tab-btn px-4 py-2 rounded-full text-xs font-bold transition bg-steamBlue text-steamDarkBg shadow-lg">
+                    <i class="fa-solid fa-store mr-1"></i> Store
+                </button>
+                <button onclick="switchTab('library')" id="nav-library" class="tab-btn px-4 py-2 rounded-full text-xs font-bold transition text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-gamepad mr-1"></i> Library <span id="lib-count-badge" class="bg-steamDarkGray text-white text-[10px] px-1.5 py-0.5 rounded-full ml-1">1</span>
+                </button>
+                <button onclick="switchTab('social')" id="nav-social" class="tab-btn px-4 py-2 rounded-full text-xs font-bold transition text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-users mr-1"></i> Social & Chat
+                </button>
+                <button onclick="switchTab('studio')" id="nav-studio" class="tab-btn px-4 py-2 rounded-full text-xs font-bold transition text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-database mr-1"></i> Studio
+                </button>
+                <button onclick="switchTab('connection')" id="nav-connection" class="tab-btn px-4 py-2 rounded-full text-xs font-bold transition text-steamLightGray hover:text-white">
+                    <i class="fa-solid fa-server mr-1"></i> Connector <span id="conn-indicator-dot" class="inline-block w-2 h-2 rounded-full bg-emerald-500 ml-1"></span>
+                </button>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <button onclick="openCartModal()" class="relative bg-steamCardBg p-2 rounded-lg text-steamBlue">
+                    <i class="fa-solid fa-shopping-cart text-sm"></i>
+                    <span id="cart-counter" class="absolute -top-1 -right-1 bg-steamGreen text-steamDarkBg font-bold text-[10px] w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
+                </button>
+
+                <div class="flex items-center gap-2 border-l border-gray-700 pl-3">
+                    <img src="https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=150&auto=format&fit=crop&q=80" alt="Avatar" class="w-8 h-8 rounded-full border border-steamGreen">
+                    <div class="hidden sm:block text-left">
+                        <span class="text-xs font-semibold text-white block">DevGamer_99</span>
+                        <span class="text-[10px] text-steamGreen block">Wallet: <span id="header-balance-val">$150.00</span></span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <section class="bg-steamDarkBg/80 border-b border-gray-900 py-1.5 px-4 text-[11px] text-gray-400">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex gap-4">
+                <span><i class="fa-solid fa-circle text-steamGreen text-[8px] mr-1"></i> Client Online</span>
+                <span><i class="fa-solid fa-globe text-steamBlue mr-1"></i> 26M Active Gamers</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="system-mode-label" class="bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded text-[10px]">Local Sandbox</span>
+                <span class="text-amber-400"><i class="fa-solid fa-shield-halved mr-1"></i> Admin Mode</span>
+            </div>
+        </div>
+    </section>
+
+    </body>
+</html>
