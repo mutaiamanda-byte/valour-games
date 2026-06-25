@@ -1,0 +1,368 @@
+* {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1b2838;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            min-height: 100vh;
+        }
+        .top-bar {
+               background: #171a21;
+            padding: 12px 24px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #66c0f4;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+         .logo small {
+            font-size: 10px;
+            color: #66c0f4;
+            font-weight: normal;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+
+        /* Navigation Menu */
+        .menu {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            border-radius: 25px;
+        }
+          .menu button {
+            background: none;
+            border: none;
+            color: #c7d5e0;
+            padding: 8px 18px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+         .menu button:hover {
+            color: white;
+        }
+
+        .menu .active {
+            background: #66c0f4;
+            color: #171a21;
+        }
+
+        .menu .active:hover {
+            background: #7fcff7;
+        }
+
+        /* Badge for Library count */
+        .badge {
+            background: #a3cf06;
+            color: #171a21;
+            border-radius: 50%;
+            padding: 0 7px;
+            font-size: 11px;
+            font-weight: bold;
+            display: inline-block;
+            margin-left: 4px;
+        }
+
+        /* Right Side - User Info */
+        .right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        /* Cart Button */
+        .cart-btn {
+            background: none;
+            border: none;
+            color: #66c0f4;
+            font-size: 18px;
+            cursor: pointer;
+            position: relative;
+            padding: 4px;
+        }
+
+        .cart-btn:hover {
+            color: #7fcff7;
+        }
+
+        .cart-count {
+            background: #a3cf06;
+            color: #171a21;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 0 5px;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            display: none;
+        }
+
+        .cart-count.show {
+            display: inline-block;
+        }
+
+        /* User Avatar */
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2a475e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid #a3cf06;
+            cursor: pointer;
+        }
+
+        .avatar:hover {
+            border-color: #b8e619;
+        }
+
+        /* Username */
+        .username {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+
+        /* Wallet Balance */
+        .wallet {
+            font-size: 12px;
+            color: #a3cf06;
+            font-weight: 600;
+            background: rgba(163, 207, 6, 0.1);
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(163, 207, 6, 0.2);
+        }
+
+        /* Status Bar (Below Header) */
+        .status-bar {
+            background: rgba(23, 26, 33, 0.8);
+            padding: 8px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #1a1a1a;
+            font-size: 12px;
+            color: #8a8f9a;
+        }
+
+        .status-left {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .status-left span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #a3cf06;
+        }
+
+        .status-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sandbox-mode {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .admin-mode {
+            color: #fbbf24;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Main Content Area (Demo) */
+        .main-content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 24px;
+            text-align: center;
+            color: #8a8f9a;
+        }
+
+        .main-content h2 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .main-content p {
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Cart Modal (Simple) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #1b2838;
+            border: 1px solid #2a475e;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .modal p {
+            color: #c7d5e0;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: #66c0f4;
+            border: none;
+            color: #171a21;
+            padding: 8px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .modal-close:hover {
+            background: #7fcff7;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .top-bar {
+                padding: 12px 16px;
+                gap: 12px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .menu {
+                width: 100%;
+                justify-content: center;
+                padding: 6px;
+            }
+
+            .menu button {
+                font-size: 12px;
+                padding: 6px 14px;
+            }
+
+            .right {
+                width: 100%;
+                justify-content: center;
+                gap: 12px;
+            }
+
+            .status-bar {
+                padding: 8px 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .status-left {
+                gap: 12px;
+            }
+
+            .status-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .username {
+                font-size: 12px;
+            }
+
+            .wallet {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .menu button {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+
+            .status-left {
+                gap: 8px;
+                font-size: 11px;
+            }
+
+            .status-right {
+                font-size: 11px;
+            }
+
+            .main-content h2 {
+                font-size: 22px;
+            }
+        }
+   
