@@ -1,0 +1,96 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>VAPOR Platform</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="logo">VAPOR <small>Platform Edition</small></div>
+
+        <div class="menu" id="mainMenu">
+            <button class="active" data-tab="store">Store</button>
+            <button data-tab="library">Library <span class="badge" id="libraryBadge">6</span></button>
+            <button data-tab="social">Social</button>
+            <button data-tab="studio">Studio</button>
+        </div>
+
+        <div class="right">
+            <button class="cart-btn" id="cartBtn" onclick="openCart()">
+                <span class="cart-count show" id="cartCount">2</span>
+            </button>
+            <div class="avatar"></div>
+            <span class="username">CNS_gamer_90</span>
+            <span class="wallet">$150.00</span>
+        </div>
+    </div>
+
+    <!-- STATUS BAR -->
+    <div class="status-bar">
+        <div class="status-left">
+            <span><span class="status-dot"></span> Client Online</span>
+            <span>26M Active Gamers</span>
+        </div>
+        <div class="status-right">
+            <span class="sandbox-mode">Local Sandbox</span>
+            <span class="admin-mode">Admin Mode</span>
+        </div>
+    </div>
+
+    <!-- TAB PANELS -->
+    <div id="tab-store"   class="tab-panel active">
+        <div class="main-content"><h2>🛍️ Store</h2><p>Browse the latest games and deals.</p></div>
+    </div>
+
+    <div id="tab-library" class="tab-panel">
+        <!-- libraryPage.html content goes here -->
+    </div>
+
+    <div id="tab-social"  class="tab-panel">
+        <div class="main-content"><h2>👥 Social</h2><p>Connect with friends and chat.</p></div>
+    </div>
+
+    <div id="tab-studio"  class="tab-panel">
+        <div class="main-content"><h2>💻 Studio</h2><p>Create and manage your game projects.</p></div>
+    </div>
+
+    <!-- CART MODAL -->
+    <div class="modal-overlay" id="cartModal">
+        <div class="modal">
+            <h3>🛒 Your Cart</h3>
+            <p>You have <strong id="modalCartCount">2</strong> items in your cart.</p>
+            <p style="font-size:14px;color:#66c0f4;">Total: $49.98</p>
+            <button class="modal-close" onclick="closeCart()">Close</button>
+        </div>
+    </div>
+
+    <style>
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+    </style>
+
+    <script>
+        // Tab switching
+        document.querySelectorAll('.menu button').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // Cart
+        let cartCount = 2;
+        function openCart()  { document.getElementById('cartModal').classList.add('show'); document.getElementById('modalCartCount').textContent = cartCount; }
+        function closeCart() { document.getElementById('cartModal').classList.remove('show'); }
+        document.getElementById('cartModal').addEventListener('click', e => { if (e.target.id === 'cartModal') closeCart(); });
+        document.getElementById('cartBtn').addEventListener('dblclick', () => { cartCount++; document.getElementById('cartCount').textContent = cartCount; });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCart(); });
+    </script>
+
+    </body>
+</html>
