@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VAPOR</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Exo 2',sans-serif;overflow:hidden;background:#000;color:#fff;height:100vh;position:relative;}#loader{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity 0.8s ease;}.vapor{font-size:142px;font-weight:300;writing-mode:vertical-rl;letter-spacing:-28px;color:transparent;background:linear-gradient(180deg,#00ffff,#ff00ff);background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 40px #00ffff);animation:glitchVapor 2.8s forwards;position:relative;}.vapor::before,.vapor::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.8;}.vapor::before{animation:glitch1 0.4s infinite linear alternate-reverse;color:#00ffff;left:2px;text-shadow:-2px 0 #ff00ff;}.vapor::after{animation:glitch2 0.3s infinite linear alternate-reverse;color:#ff00ff;left:-2px;text-shadow:2px 0 #00ffff;}@keyframes glitchVapor{0%{opacity:0;transform:scale(0.6)rotate(-20deg);}15%{opacity:1;filter:drop-shadow(0 0 80px #00ffff);}100%{opacity:1;transform:scale(1)rotate(0deg);}}@keyframes glitch1{0%{clip:rect(20px,9999px,60px,0);}20%{clip:rect(5px,9999px,85px,0);}100%{clip:rect(30px,9999px,70px,0);}}@keyframes glitch2{0%{clip:rect(40px,9999px,90px,0);}30%{clip:rect(10px,9999px,50px,0);}}#main-content{display:none;height:100vh;position:relative;}#bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:brightness(0.7)contrast(1.2)saturate(1.4);}.tint{position:fixed;inset:0;background:linear-gradient(135deg,rgba(10,5,35,0.75),rgba(0,0,0,0.65));z-index:-1;}header{position:fixed;top:25px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.7);border:1px solid rgba(0,255,255,.3);border-radius:30px;padding:8px 16px;display:flex;align-items:center;gap:12px;z-index:100;backdrop-filter:blur(12px);}.logo-main{font-family:'Orbitron',sans-serif;font-size:26px;font-weight:900;letter-spacing:4px;background:linear-gradient(90deg,#00ffff,#ff00ff);-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 20px;}.nav-tabs,.store-nav{display:flex;gap:10px;align-items:center;}.nav-tab-icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,.06);color:#c7d5e0;text-decoration:none;font-size:18px;transition:all .18s ease;border:1px solid transparent;}.nav-tab-icon:hover{background:#66c0f4;color:#071528;transform:translateY(-2px);box-shadow:0 6px 18px rgba(102,192,244,0.12);}.user-avatar{width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid #00ffff;}#user-wrapper{position:relative;display:inline-flex;align-items:center;}#user-menu{display:none;position:absolute;top:46px;right:0;background:rgba(255,255,255,0.96);color:#111;border-radius:8px;padding:6px;box-shadow:0 6px 18px rgba(0,0,0,0.25);min-width:120px;text-align:center;z-index:150;}#user-menu button{background:none;border:none;color:#111;cursor:pointer;padding:8px 10px;width:100%;border-radius:6px;font-weight:700;}#user-menu button:hover{background:#66c0f4;color:#000;}.join-grid{font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;padding:7px 16px;border:1px solid #00ffff;color:#00ffff;background:transparent;border-radius:30px;cursor:pointer;}.modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:360px;background:rgba(10,10,30,0.96);border:2px solid #00ffff;border-radius:20px;padding:40px 35px;z-index:200;box-shadow:0 0 60px rgba(0,255,255,0.7);}.modal input{width:100%;padding:16px;margin:12px 0;background:rgba(255,255,255,.08);border:1px solid #00ffff;border-radius:10px;color:#fff;}.modal button{width:100%;padding:16px;margin-top:15px;background:linear-gradient(90deg,#00ffff,#ff00ff);border:none;border-radius:10px;color:#000;font-weight:700;cursor:pointer;}.switch-mode{cursor:default;user-select:none;}.switch-mode strong{cursor:default;}.notification{position:fixed;top:100px;left:50%;transform:translateX(-50%);background:rgba(255,80,80,0.95);color:white;padding:14px 28px;border-radius:12px;z-index:300;display:none;box-shadow:0 0 30px rgba(255,80,80,0.6);}@media(max-width:768px){body{overflow:auto;}#main-content{height:auto;min-height:100vh;}.vapor{font-size:96px;letter-spacing:-20px;}header{width:calc(100% - 24px);left:50%;transform:translateX(-50%);padding:8px 10px;flex-wrap:wrap;justify-content:center;top:12px;}.logo-main{font-size:18px;padding:0 8px;letter-spacing:2px;}.nav-tabs{flex-wrap:wrap;justify-content:center;}.store-nav{gap:8px;}.nav-tab-icon{width:38px;height:38px;}.user-avatar{width:32px;height:32px;}.join-grid{width:100%;margin-top:6px;}.modal{width:calc(100% - 24px);padding:24px 18px;border-radius:16px;}.notification{width:calc(100% - 24px);left:50%;transform:translateX(-50%);padding:12px 16px;top:84px;}}</style>
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div id="loader">
+    <div class="vapor" data-text="VAPOR">VAPOR</div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main-content">
+    <video id="bg-video" autoplay loop muted playsinline>
+      <source src="From Klickpin.com- Lovely small routine upgrades for daily inspiration that work all year round-pin-id-1094515515707986339.mp4" type="video/mp4">
+    </video>
+    <div class="tint"></div>
+
+    <header>
+      <div class="logo-main">VAPOR</div>
+
+      <div class="nav-tabs store-nav">
+        <a href="storepage.html" class="nav-tab-icon" title="Store"><i class="fa-solid fa-store"></i></a>
+        <a href="library.html" class="nav-tab-icon" title="Library"><i class="fa-solid fa-book"></i></a>
+        <a href="social.html" class="nav-tab-icon" title="Social"><i class="fa-solid fa-user-group"></i></a>
+      </div>
+
+      <div id="user-wrapper" style="display:none; align-items:center; gap:12px; margin-left:8px;">
+        <div id="user-section" style="display:flex; align-items:center; gap:8px; cursor:pointer;" onclick="toggleUserMenu(event)">
+          <img id="user-avatar" class="user-avatar" src="" alt="">
+          <span id="username-display" style="font-weight:600;"></span>
+        </div>
+        <div id="user-menu">
+          <button id="logout-btn" onclick="logoutUser()">Logout</button>
+        </div>
+      </div>
+
+      <button class="join-grid" onclick="showModal()" id="join-btn">JOIN THE GRID</button>
+    </header>
+
+    <!-- MODAL -->
+    <div class="modal" id="auth-modal">
+      <h2 id="modal-title">JOIN THE GRID</h2>
+      <input type="text" id="username-input" placeholder="USERNAME" />
+      <input type="password" id="password-input" placeholder="PASSWORD" />
+      <button id="action-btn" onclick="handleAuth()">LOGIN</button>
+      <div class="switch-mode" id="switch-text" onclick="toggleMode()">
+        Don't have an account? <strong>Sign Up</strong>
+      </div>
+    </div>
+
+    <!-- In-page Notification -->
+    <div class="notification" id="notification"></div>
+  </div>
+
+  <script>let users=JSON.parse(localStorage.getItem('vaporUsers'))||[{username:"neonracer",password:"1234",avatar:"https://i.pravatar.cc/150?u=neon1"},{username:"shadowbyte",password:"1234",avatar:"https://i.pravatar.cc/150?u=shadow2"}];let currentUser=null;try{currentUser=JSON.parse(localStorage.getItem('vaporCurrentUser'))||null}catch(e){currentUser=null}if(currentUser){document.getElementById('user-avatar').src=currentUser.avatar;document.getElementById('username-display').textContent=currentUser.username;document.getElementById('user-wrapper').style.display='inline-flex';document.getElementById('join-btn').style.display='none'}setTimeout(()=>{document.getElementById('loader').style.opacity='0';setTimeout(()=>{document.getElementById('loader').style.display='none';document.getElementById('main-content').style.display='block';if(!currentUser){showModal()}},800)},2900);document.getElementById('bg-video').play().catch(()=>{});document.querySelectorAll('.nav-tab-icon').forEach(link=>{link.addEventListener('click',function(e){if(!currentUser){e.preventDefault();showNotification('Please log in to access the site','error');showModal()}})});const authRequired=new URLSearchParams(window.location.search).get('auth');if(authRequired==='required'){showNotification('Please log in to access the site','error')}let isLoginMode=true;function showModal(){document.getElementById('auth-modal').style.display='block';isLoginMode=true;setMode()}function toggleMode(){isLoginMode=!isLoginMode;setMode()}function setMode(){document.getElementById('modal-title').textContent=isLoginMode?'LOGIN':'CREATE PROFILE';document.getElementById('action-btn').textContent=isLoginMode?'LOGIN':'SIGN UP';document.getElementById('switch-text').innerHTML=isLoginMode?`Don't have an account?<strong>Sign Up</strong>`:`Already have an account?<strong>Login</strong>`}function handleAuth(){const username=document.getElementById('username-input').value.trim();const password=document.getElementById('password-input').value.trim();if(!username||!password){showNotification("Please fill both fields","error");return}if(isLoginMode){const user=users.find(u=>u.username===username&&u.password===password);if(user){loginSuccess(user)}else{showNotification("Invalid username or password","error")}}else{if(users.find(u=>u.username===username)){showNotification("Username already taken","error");return}const newUser={username:username,password:password,avatar:`https://i.pravatar.cc/150?u=${Date.now()}`};users.push(newUser);localStorage.setItem('vaporUsers',JSON.stringify(users));loginSuccess(newUser)}}function loginSuccess(user){currentUser=user;localStorage.setItem('vaporCurrentUser',JSON.stringify(user));document.getElementById('user-avatar').src=user.avatar;document.getElementById('username-display').textContent=user.username;document.getElementById('user-wrapper').style.display='inline-flex';document.getElementById('join-btn').style.display='none';document.getElementById('auth-modal').style.display='none'}function toggleUserMenu(e){e.stopPropagation();const menu=document.getElementById('user-menu');menu.style.display=(menu.style.display==='block')? 'none':'block'}function logoutUser(){localStorage.removeItem('vaporCurrentUser');currentUser=null;document.getElementById('user-wrapper').style.display='none';document.getElementById('user-menu').style.display='none';document.getElementById('join-btn').style.display='inline-flex';showNotification('Logged out','info')}document.addEventListener('click',function(e){const menu=document.getElementById('user-menu');if(menu&&menu.style.display==='block'){const wrapper=document.getElementById('user-wrapper');if(wrapper&&!wrapper.contains(e.target)){menu.style.display='none'}}});function showNotification(message,type="info"){const notif=document.getElementById('notification');notif.textContent=message;notif.style.background=type==="error" ? "rgba(255,80,80,0.95)":"rgba(0,255,150,0.95)";notif.style.display='block';setTimeout(()=>notif.style.display='none',2800)}</script>
+</body>
+</html>
