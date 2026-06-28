@@ -1,0 +1,415 @@
+<html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store - VAPOR Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="stylestore.css">
+</head>
+<body>
+    <script>
+        (function () {
+            try {
+                const user = JSON.parse(localStorage.getItem('vaporCurrentUser') || 'null');
+                if (!user) {
+                    window.location.replace('index.html?auth=required');
+                }
+            } catch (e) {
+                window.location.replace('index.html?auth=required');
+            }
+        })();
+    </script>
+
+    <div class="store-container">
+
+        <!-- ===== HEADER ===== -->
+        <div class="store-header">
+
+            <!-- Wallet on top-left -->
+            <div class="wallet" id="wallet" style="display:none;">
+                <div class="wallet-icon" id="wallet-icon">💼</div>
+                <div class="wallet-balance" id="wallet-balance">$0</div>
+                                <div id="wallet-menu" style="display:none; position:absolute; top:40px; left:0; padding:8px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.2); min-width:140px; text-align:center; z-index:400;">
+                  <div id="wallet-menu-balance">Balance: $0</div>
+                  <button onclick="addFunds(10)" style="margin-top:8px;padding:6px 8px;border-radius:6px;border:none;background:#66c0f4;color:#000;font-weight:700;cursor:pointer;">Add $10</button>
+                </div>
+            </div>
+
+            <nav class="store-nav">
+                <a class="nav-tab-icon" href="index.html" title="Home"><i class="fa-solid fa-house"></i></a>
+                <a class="nav-tab-icon" href="library.html" title="Library"><i class="fa-solid fa-book"></i></a>
+                <a class="nav-tab-icon" href="social.html" title="Social"><i class="fa-solid fa-user-group"></i></a>
+                <a class="nav-tab-icon cart-icon" href="#" id="cart-btn" title="Cart"><i class="fa-solid fa-shopping-cart"></i><span id="cart-count" class="cart-count">0</span></a>
+                <div style="width:8px"></div>
+                <img id="user-avatar" src="https://via.placeholder.com/40" alt="avatar" class="header-avatar">
+                <div id="username-display" style="display:none; font-weight:800;color:#e6f6ff; margin-left:8px;">Guest</div>
+            </nav>
+
+            <h1 class="discover">Discover your next <span class="spark">adventure</span></h1>
+
+            <!-- Cart menu -->
+            <div id="cart-menu" style="display:none; position:absolute; top:56px; right:12px; background:#1b2838; color:#e6f6ff; padding:10px; border-radius:10px; box-shadow:0 8px 30px rgba(0,0,0,0.6); min-width:220px; max-width:360px; z-index:500;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <strong>Your Cart</strong>
+                    <button id="cart-clear" style="background:transparent;border:none;color:#66c0f4;cursor:pointer;font-weight:700">Clear</button>
+                </div>
+                <div id="cart-items" style="display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto;padding-right:4px"></div>
+                <div id="cart-empty" style="color:#9aa6b2;text-align:center;padding:8px 0;display:none">No items</div>
+                <div style="border-top:1px solid #23313f;margin-top:10px;padding-top:8px;display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-weight:800">Total</div>
+                    <div id="cart-total" style="font-weight:900">$0.00</div>
+                </div>
+                <button id="cart-checkout" style="width:100%;margin-top:10px;padding:10px 0;border:none;border-radius:10px;background:#66c0f4;color:#071528;font-weight:800;cursor:pointer;">Checkout</button>
+            </div>
+        </div>
+
+        <!-- ===== FEATURED GAME ===== -->
+        <div class="featured-game">
+            <div class="featured-game-image">
+                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80" alt="Featured Game">
+            </div>
+            <div class="featured-game-info">
+                <div>
+                    <span class="featured-badge">🔥 Featured</span>
+                    <h2>Cyberstrike: Neo Tokyo</h2>
+                    <p>Command heavy tactical mechs in the neon shadows of a corporate dystopian warzone.</p>
+                    <div class="game-tags">
+                        <span>Action</span>
+                        <span>Tactical Mech</span>
+                        <span>Indie</span>
+                    </div>
+                </div>
+                <div class="featured-game-footer">
+                    <div class="price">
+                        <span class="original">$59.99</span>
+                        <span class="current">$29.99</span>
+                        <span class="discount">-50%</span>
+                    </div>
+                    <button class="btn-add-cart" id="featured-add" data-id="1" onclick="addToCart(1)">
+                        <span class="btn-text">🛒 Add to Cart</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FILTER BAR ===== -->
+        <div class="filter-bar">
+            <div class="filter-buttons">
+                <button class="active" data-filter="all" onclick="filterGames('all')">All</button>
+                <button data-filter="action" onclick="filterGames('action')">Action</button>
+                <button data-filter="rpg" onclick="filterGames('rpg')">RPG</button>
+                <button data-filter="adventure" onclick="filterGames('adventure')">Adventure</button>
+                <button data-filter="indie" onclick="filterGames('indie')">Indie</button>
+            </div>
+            <div class="search-box">
+                <span class="icon">🔍</span>
+                <input type="text" id="searchInput" placeholder="Search games..." onkeyup="filterGames()">
+            </div>
+        </div>
+
+        <!-- ===== GAME GRID ===== -->
+        <div class="game-grid" id="gameGrid">
+            <!-- Games will be rendered here by JavaScript -->
+        </div>
+
+        <!-- ===== NO RESULTS ===== -->
+        <div class="no-results" id="noResults">
+            <p>😕 No games found matching your criteria.</p>
+        </div>
+
+    </div>
+
+    <script>
+        // ===== GAME DATA =====
+        const games = [
+            {
+                id: 1,
+                title: "Cyberstrike: Neo Tokyo",
+                category: "action",
+                price: 29.99,
+                originalPrice: 59.99,
+                image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?w=400&auto=format&fit=crop&q=80"
+            },
+            {
+                id: 2,
+                title: "Dragon's Legacy",
+                category: "rpg",
+                price: 39.99,
+                originalPrice: null,
+                image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=400&auto=format&fit=crop&q=80"
+            },
+            {
+                id: 3,
+                title: "Mystic Realms",
+                category: "adventure",
+                price: 24.99,
+                originalPrice: null,
+                image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=400&auto=format&fit=crop&q=80"
+            },
+            {
+                id: 4,
+                title: "Pixel Warriors",
+                category: "indie",
+                price: 14.99,
+                originalPrice: null,
+                image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400&auto=format&fit=crop&q=80"
+            },
+            {
+                id: 5,
+                title: "Space Odyssey",
+                category: "action",
+                price: 49.99,
+                originalPrice: null,
+                image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=400&auto=format&fit=crop&q=80"
+            },
+            {
+                id: 6,
+                title: "Forgotten Kingdom",
+                category: "rpg",
+                price: 34.99,
+                originalPrice: 49.99,
+                image: "https://i.pinimg.com/736x/ab/94/ad/ab94ad1ab94bc3601c4947ca2095544f.jpg"
+            },
+            {
+                id: 7,
+                title: "Neon Drift",
+                category: "indie",
+                price: 19.99,
+                originalPrice: null,
+                image: "https://images.unsplash.com/photo-1511882150382-421056c89033?w=400&auto=format&fit=crop&q=80"
+            },
+            {
+                id: 8,
+                title: "Shadow Stalker",
+                category: "action",
+                price: 44.99,
+                originalPrice: 59.99,
+                image: "https://images.unsplash.com/photo-1560253023-3ec5d502959f?w=400&auto=format&fit=crop&q=80"
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // ===== RENDER GAMES =====
+        function renderGames(filter = 'all', search = '') {
+            const grid = document.getElementById('gameGrid');
+            const noResults = document.getElementById('noResults');
+            const styles=['background:linear-gradient(135deg,#1f2937,#111827);','background:linear-gradient(135deg,#0f172a,#112e5f);','background:linear-gradient(135deg,#201f2f,#3d1b3d);','background:linear-gradient(135deg,#111827,#162a49);'];
+            let filtered = games;
+
+            // Filter by category
+            if (filter !== 'all') {
+                filtered = filtered.filter(game => game.category === filter);
+            }
+
+            // Filter by search
+            if (search.trim()) {
+                const query = search.toLowerCase().trim();
+                filtered = filtered.filter(game => 
+                    game.title.toLowerCase().includes(query) ||
+                    game.category.toLowerCase().includes(query)
+                );
+            }
+
+            // Show/hide no results
+            if (filtered.length === 0) {
+                noResults.classList.add('show');
+                grid.innerHTML = '';
+                return;
+            } else {
+                noResults.classList.remove('show');
+            }
+
+            // Render games (ensure an image fallback when missing)
+            grid.innerHTML = filtered.map((game,i) => {
+                const imgSrc = game.image || 'https://via.placeholder.com/400x250?text=No+Image';
+                const cartList=JSON.parse(localStorage.getItem('vaporCart')||'[]');
+                const purchased=JSON.parse(localStorage.getItem('vaporLibrary')||'[]');
+                const owned=purchased.some(i=>i.id===game.id);
+                const inCart=cartList.some(i=>i.id===game.id);
+                const style=styles[i%styles.length];
+                const btnHTML=owned?`<button class="in-cart owned" disabled><i class="fa-solid fa-check"></i></button>`: inCart?`<button class="in-cart" data-id="${game.id}" disabled><i class="fa-solid fa-check"></i></button>`:`<button class="add-btn" data-id="${game.id}" onclick="addToCart(${game.id})">+ Add</button>`;
+                return `
+                <div class="game-card" style="${style}">
+                    <div class="game-card-image">
+                        <img src="${imgSrc}" alt="${game.title}" loading="lazy">
+                    </div>
+                    <div class="game-card-body">
+                        <h4>${game.title}</h4>
+                        <div class="category">${game.category}</div>
+                        <div class="card-price">
+                            <span>
+                                $${game.price.toFixed(2)}
+                                ${game.originalPrice ? `<span style="font-size:11px;color:#5a606b;text-decoration:line-through;font-weight:400;"> $${game.originalPrice.toFixed(2)}</span>` : ''}
+                            </span>
+                            ${btnHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+            
+        }
+
+        // ===== FILTER GAMES =====
+        function filterGames(category) {
+            const search = document.getElementById('searchInput').value;
+            
+            if (typeof category !== 'undefined') {
+                currentFilter = category;
+                document.querySelectorAll('.filter-buttons button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.filter === category);
+                });
+            }
+
+            renderGames(currentFilter, search);
+        }
+
+        function initStore() {
+            updateCartCountUI();
+            updateCartMenuUI();
+            renderGames();
+            // Cart button toggle and outside-click close
+            document.getElementById('cart-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                const menu = document.getElementById('cart-menu');
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            });
+            document.getElementById('cart-clear').addEventListener('click', function(){
+                localStorage.setItem('vaporCart','[]');
+                updateCartCountUI();
+                updateCartMenuUI();
+                renderGames(currentFilter, document.getElementById('searchInput')?.value||'');
+            });
+            document.getElementById('cart-checkout').addEventListener('click', function(){
+                const cart = JSON.parse(localStorage.getItem('vaporCart')||'[]');
+                if (!cart.length) return;
+                localStorage.setItem('vaporCart', '[]');
+                updateCartCountUI();
+                updateCartMenuUI();
+                renderGames(currentFilter, document.getElementById('searchInput')?.value||'');
+            });
+            initSiteWalletAndUser();
+        }
+
+        function addToCart(gameId){
+            const key='vaporCart';
+            const cur = JSON.parse(localStorage.getItem(key)||'[]');
+            if (cur.some(i=>i.id===gameId)) return updateCartCountUI();
+            const g = games.find(x=>x.id===gameId);
+            if (!g) return;
+            cur.push({id:g.id,title:g.title,price:g.price,image:g.image,category:g.category});
+            localStorage.setItem(key,JSON.stringify(cur));
+            updateCartCountUI();
+            updateCartMenuUI();
+            renderGames(currentFilter, document.getElementById('searchInput')?.value||'');
+        }
+
+        function updateCartCountUI() {
+            const cur = JSON.parse(localStorage.getItem('vaporCart') || '[]');
+            const n = Array.isArray(cur) ? cur.length : 0;
+            const el = document.getElementById('cart-count');
+            if (el) {
+                el.textContent = n;
+                el.style.display = n > 0 ? 'inline-block' : 'none';
+            }
+        }
+
+        function updateCartMenuUI(){
+            const list=document.getElementById('cart-items');
+            const empty=document.getElementById('cart-empty');
+            const totalEl=document.getElementById('cart-total');
+            const cur=JSON.parse(localStorage.getItem('vaporCart')||'[]');
+            if (!list) return;
+            if (!cur.length) {
+                list.innerHTML='';
+                empty.style.display='block';
+                totalEl.textContent='$0.00';
+                document.getElementById('cart-checkout').disabled=true;
+                return;
+            }
+            empty.style.display='none';
+            document.getElementById('cart-checkout').disabled=false;
+            const total = cur.reduce((s,i)=>s+(i.price||0),0);
+            list.innerHTML = cur.map(item=>`<div style="display:flex;gap:8px;align-items:center"><img src="${item.image||'https://via.placeholder.com/80x50?text=Game'}" style="width:60px;height:40px;object-fit:cover;border-radius:6px"><div style="flex:1"><div style="font-weight:700">${item.title}</div><div style="font-size:12px;color:#9aa6b2">$${(item.price||0).toFixed(2)}</div></div><button data-id="${item.id}" class="cart-remove" style="background:transparent;border:none;color:#ff7b7b;font-weight:800;cursor:pointer">✕</button></div>`).join('');
+            totalEl.textContent=`$${total.toFixed(2)}`;
+            document.querySelectorAll('.cart-remove').forEach(b=>b.addEventListener('click',e=>removeFromCart(parseInt(e.currentTarget.dataset.id))));
+        }
+
+        function removeFromCart(id){
+            const cur=JSON.parse(localStorage.getItem('vaporCart')||'[]');
+            const next=cur.filter(i=>i.id!==id);
+            localStorage.setItem('vaporCart',JSON.stringify(next));
+            updateCartCountUI();
+            updateCartMenuUI();
+            renderGames(currentFilter, document.getElementById('searchInput')?.value||'');
+        }
+
+        // ===== INITIALIZE =====
+        initStore();
+
+        function initSiteWalletAndUser() {
+            let bal = parseFloat(localStorage.getItem('vaporWallet')) || 150.00;
+            localStorage.setItem('vaporWallet', bal.toFixed(2));
+            const wallet = document.getElementById('wallet');
+            const balEl = document.getElementById('wallet-balance');
+            const menuBal = document.getElementById('wallet-menu-balance');
+            if (wallet && balEl) {
+                wallet.style.display = 'flex';
+                balEl.textContent = `$${parseFloat(bal).toFixed(2)}`;
+                if (menuBal) menuBal.textContent = `Balance: $${parseFloat(bal).toFixed(2)}`;
+                document.getElementById('wallet-icon').addEventListener('click', toggleWalletMenu);
+            }
+
+            const user = JSON.parse(localStorage.getItem('vaporCurrentUser')) || null;
+            if (user) {
+                const nav = document.querySelector('.store-nav');
+                let avatar = document.getElementById('user-avatar');
+                let uname = document.getElementById('username-display');
+                if (!nav) return;
+                if (!avatar) {
+                    avatar = document.createElement('img');
+                    avatar.id = 'user-avatar';
+                    avatar.className = 'header-avatar';
+                    avatar.style.width = '40px'; avatar.style.height = '40px'; avatar.style.borderRadius = '50%'; avatar.style.objectFit = 'cover'; avatar.style.border = '2px solid #66c0f4';
+                    nav.appendChild(avatar);
+                }
+                if (!uname) {
+                    uname = document.createElement('div');
+                    uname.id = 'username-display';
+                    uname.style.fontWeight = '800'; uname.style.color = '#e6f6ff'; uname.style.marginLeft = '8px'; uname.style.display='inline-block';
+                    nav.appendChild(uname);
+                }
+                avatar.src = user.avatar || 'https://via.placeholder.com/40';
+                uname.textContent = user.username || 'Guest';
+            }
+
+            updateCartCountUI();
+        }
+
+        function toggleWalletMenu(e) {
+            e.stopPropagation();
+            const m = document.getElementById('wallet-menu');
+            if (!m) return;
+            m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function addFunds(amount) {
+            let bal = parseFloat(localStorage.getItem('vaporWallet')) || 0;
+            bal += amount;
+            localStorage.setItem('vaporWallet', bal.toFixed(2));
+            document.getElementById('wallet-balance').textContent = `$${bal.toFixed(2)}`;
+            const menuBal = document.getElementById('wallet-menu-balance'); if (menuBal) menuBal.textContent = `Balance: $${bal.toFixed(2)}`;
+        }
+
+        document.addEventListener('click', function(e){
+            const wm = document.getElementById('wallet-menu');
+            const cm = document.getElementById('cart-menu');
+            if (wm && wm.style.display==='block' && !document.getElementById('wallet').contains(e.target)) wm.style.display='none';
+            if (cm && cm.style.display==='block' && !document.getElementById('cart-btn').contains(e.target) && !cm.contains(e.target)) cm.style.display='none';
+        });
+    </script>
+
+</body>
+</html>
