@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAPOR - Social & Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');body{font-family:'Inter',sans-serif;}.store-nav{display:flex;gap:10px;align-items:center;}.nav-tab-icon{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(255,255,255,0.06);color:#c7d5e0;text-decoration:none;font-size:18px;transition:all .18s ease;border:1px solid transparent;}.nav-tab-icon:hover{background:#66c0f4;color:#171a21;transform:translateY(-2px);}.header-avatar{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #66c0f4;}.custom-scroll::-webkit-scrollbar{width:5px;}.custom-scroll::-webkit-scrollbar-thumb{background:#66c0f4;border-radius:20px;}.friend-item{transition:all 0.3s ease;}.friend-item:hover{transform:translateX(8px);background-color:rgba(102,192,244,0.15)!important;}.friend-item.active{background-color:rgba(102,192,244,0.25);border-left:4px solid #66c0f4;}.social-main-grid{height:450px;}.message-bubble{animation:fadeIn 0.3s ease forwards;}@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}@media(max-width:768px){body{padding:0;}header{padding:10px 12px;}.store-nav{gap:8px;flex-wrap:wrap;justify-content:flex-end;}.nav-tab-icon{width:38px;height:38px;}.header-avatar{width:34px;height:34px;}.max-w-7xl{padding:12px;}.grid{gap:12px;}.lg\:col-span-4,.lg\:col-span-8{grid-column:span 1;}.social-main-grid{height:auto !important;}#friends-panel{order:1;max-height:320px;overflow:hidden;}#friends-list-container{display:flex;flex-direction:column;gap:8px;overflow-y:auto;}#chat-panel{order:2;min-height:480px;margin-top:8px;}#chat-scroller{min-height:260px;max-height:none;}#chat-msg-field{font-size:14px;}.friend-item{padding:10px 12px;border-radius:16px;}#friends-avatar-section{display:none;}}</style>
+</head>
+<body class="bg-[#1b2838] text-gray-300 min-h-screen">
+    <script>(function(){try{const user=JSON.parse(localStorage.getItem('vaporCurrentUser')||'null');if(!user){window.location.replace('index.html?auth=required')}}catch(e){window.location.replace('index.html?auth=required')}})();</script>
+
+<!-- Header Section -->
+
+    <header class="bg-[#171a21] border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-[#66c0f4] p-2.5 rounded-lg text-[#171a21]">
+                    <i class="fa-brands fa-steam text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-wider">VAPOR</h1>
+                    <p class="text-[10px] text-[#66c0f4] -mt-1">PLATFORM EDITION</p>
+                </div>
+            </div>
+
+            <nav class="store-nav">
+                <a class="nav-tab-icon" href="index.html" title="Home"><i class="fa-solid fa-house"></i></a>
+                <a class="nav-tab-icon" href="storepage.html" title="Store"><i class="fa-solid fa-store"></i></a>
+                <a class="nav-tab-icon" href="library.html" title="Library"><i class="fa-solid fa-book"></i></a>
+                <img id="user-avatar" src="https://i.pinimg.com/736x/ca/d7/e2/cad7e2162090d159623c980297d87766.jpg" class="header-avatar" alt="avatar">
+            </nav>
+        </div>
+    </header>
+
+    <!-- My Status Bar -->
+    <div class="bg-[#1b2838] border-b border-gray-800 py-1 px-4 text-xs">
+        <div class="max-w-7xl mx-auto flex items-center gap-6">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span> Client Online</span>
+            <span class="flex items-center gap-1.5"><i class="fa-solid fa-globe text-[#66c0f4]"></i> 26M Active Gamers</span>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto p-4">
+        <div class="social-main-grid grid grid-cols-1 lg:grid-cols-12 gap-4 h-[450px]">
+            
+            <!-- My Friends Panel -->
+            <div id="friends-panel" class="lg:col-span-4 bg-[#171a21] border border-[#66c0f4]/30 rounded-3xl p-4 flex flex-col">
+                <h3 class="font-bold text-white flex items-center gap-2 mb-4"><i class="fa-solid fa-user-group"></i> Friends Panel</h3>
+                
+                <div class="relative mb-4">
+                    <input id="friend-search-input" onkeyup="filterFriends()" placeholder="Search friends..." 
+                           class="w-full bg-black/70 border border-[#66c0f4]/50 rounded-2xl py-3 pl-10 text-sm focus:outline-none">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-[#66c0f4]"></i>
+                </div>
+
+                <div id="incoming-request-box" class="mb-4 bg-amber-500/10 border border-amber-400/40 rounded-2xl p-4">
+                    <p class="text-amber-400 font-bold">Incoming: RetroGlitch</p>
+                    <button onclick="acceptFriendInvite()" class="mt-3 w-full bg-emerald-500 text-black font-bold py-2 rounded-2xl text-sm">ACCEPT REQUEST</button>
+                </div>
+
+                <div id="friends-list-container" class="flex-1 overflow-y-auto custom-scroll space-y-1"></div>
+            </div>
+
+            <!-- Chat Space -->
+            <div id="chat-panel" class="lg:col-span-8 bg-[#171a21] border border-[#66c0f4]/30 rounded-3xl flex flex-col overflow-hidden">
+                <div class="p-4 border-b border-[#66c0f4]/20 flex items-center justify-between bg-black/40">
+                    <div class="flex items-center gap-3">
+                        <div id="chat-avatar" class="w-10 h-10 rounded-2xl overflow-hidden border border-[#66c0f4]/50">
+                            <img src="https://i.pinimg.com/736x/ca/d7/e2/cad7e2162090d159623c980297d87766.jpg" class="w-full h-full object-cover" alt="">
+                        </div>
+                        <div>
+                            <h4 id="chat-username" class="font-bold text-white">DevGamer_99</h4>
+                            <p id="chat-status" class="text-emerald-400 text-sm flex items-center gap-1">● Online</p>
+                        </div>
+                    </div>
+                    <button onclick="closeChatDialogue()" class="text-gray-400 hover:text-white text-xl">✕</button>
+                </div>
+
+                <div id="chat-scroller" class="flex-1 p-4 overflow-y-auto custom-scroll space-y-4 bg-[radial-gradient(#334155_1px,transparent_1px)] bg-[length:25px_25px]">
+                    <div class="h-full flex items-center justify-center text-gray-500 text-center">
+                        <div>
+                            <i class="fa-solid fa-comments text-5xl mb-3 opacity-40"></i>
+                            <p>Welcome to Direct Messaging</p>
+                            <p class="text-sm mt-1">Select a friend from the left panel</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 border-t border-[#66c0f4]/20 bg-black/60">
+                    <div class="flex gap-2">
+                        <input id="chat-msg-field" onkeydown="if(event.key==='Enter') sendChatMessage()" 
+                               placeholder="Type a message..." 
+                               class="flex-1 bg-black border border-[#66c0f4]/50 rounded-2xl px-5 py-3 text-sm focus:outline-none">
+                        <button onclick="sendChatMessage()" class="bg-[#66c0f4] text-black px-6 rounded-2xl">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Avatar Gallery -->
+    <div id="friends-avatar-section" class="max-w-7xl mx-auto mt-8 p-4">
+        <h2 class="text-white text-lg font-bold mb-4">Friends Avatars</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-[#171a21] border border-[#66c0f4]/30 rounded-2xl p-4 text-center">
+                <img src="https://i.pinimg.com/736x/b3/bd/ce/b3bdce7fa71e604b5853eb38e678f7ef.jpg" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-2">
+                <p class="text-white text-sm font-medium">PixelQueen_8</p>
+                <p class="text-emerald-400 text-xs">● Online</p>
+            </div>
+            <div class="bg-[#171a21] border border-[#66c0f4]/30 rounded-2xl p-4 text-center">
+                <img src="https://i.pinimg.com/736x/26/cf/aa/26cfaa6d0d1eb6be03fa7b5f7ff01783.jpg" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-2">
+                <p class="text-white text-sm font-medium">NeonVortex42</p>
+                <p class="text-emerald-400 text-xs">● Online</p>
+            </div>
+            <div class="bg-[#171a21] border border-[#66c0f4]/30 rounded-2xl p-4 text-center">
+                <img src="https://i.pinimg.com/736x/13/3b/38/133b388deb4e9fa2cd3bdd15de8fa244.jpg" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-2">
+                <p class="text-white text-sm font-medium">ShadowByte</p>
+                <p class="text-amber-400 text-xs">● Away</p>
+            </div>
+            <div class="bg-[#171a21] border border-[#66c0f4]/30 rounded-2xl p-4 text-center">
+                <img src="https://i.pinimg.com/736x/18/1b/70/181b70d7777371b3e606ca07310ba766.jpg" class="w-20 h-20 rounded-2xl object-cover mx-auto mb-2">
+                <p class="text-white text-sm font-medium">GlitchReaper</p>
+                <p class="text-emerald-400 text-xs">● Online</p>
+            </div>
+        </div>
+    </div>
+
+    <script>let activeId=null;let replyIndex=0;const replies=["Wanna play? 🎮","Sure!Game on 🚀","Brawl Stars ☠️","LFG 🔥"];let friends=[{id:101,username:"PixelQueen_8",status:"online",avatar:"https://i.pinimg.com/736x/b3/bd/ce/b3bdce7fa71e604b5853eb38e678f7ef.jpg"},{id:102,username:"NeonVortex42",status:"online",avatar:"https://i.pinimg.com/736x/26/cf/aa/26cfaa6d0d1eb6be03fa7b5f7ff01783.jpg"},{id:103,username:"ShadowByte",status:"away",avatar:"https://i.pinimg.com/736x/13/3b/38/133b388deb4e9fa2cd3bdd15de8fa244.jpg"},{id:104,username:"GlitchReaper",status:"online",avatar:"https://i.pinimg.com/736x/18/1b/70/181b70d7777371b3e606ca07310ba766.jpg"}];const friendQuery=()=>document.getElementById('friend-search-input').value;function renderFriends(search=''){const cont=document.getElementById('friends-list-container');cont.innerHTML='';friends.filter(f=>f.username.toLowerCase().includes(search.toLowerCase())).forEach(f=>{const active=activeId===f.id ? 'active':'';const div=document.createElement('div');div.className=`friend-item flex items-center gap-3 p-3 rounded-2xl cursor-pointer ${active}`;div.innerHTML=`<img src="${f.avatar}" class="w-10 h-10 rounded-2xl object-cover"><div class="flex-1"><p class="font-medium">${f.username}</p><p class="text-xs ${f.status==='online' ? 'text-emerald-400':'text-amber-400'}">${f.status}</p></div>`;div.onclick=()=>openChat(f.id,f.username,f.avatar);cont.appendChild(div)})}function filterFriends(){renderFriends(friendQuery())}function openChat(id,username,avatar){activeId=id;document.getElementById('chat-username').textContent=username;document.getElementById('chat-avatar').innerHTML=`<img src="${avatar}" class="w-full h-full object-cover">`;renderFriends(friendQuery());document.getElementById('chat-scroller').innerHTML=`<div class="h-full flex items-center justify-center text-gray-500 text-center"><div><i class="fa-solid fa-comments text-5xl mb-3 opacity-40"></i><p>Chatting with ${username}</p></div></div>`;if(window.innerWidth<=768){document.getElementById('chat-panel').scrollIntoView({behavior:'smooth',block:'start'})}}function sendChatMessage(){const input=document.getElementById('chat-msg-field');const msg=input.value.trim();if(!msg||!activeId)return;const scroller=document.getElementById('chat-scroller');scroller.innerHTML+=`<div class="flex justify-end message-bubble"><div class="max-w-[70%]bg-[#66c0f4]/20 border border-[#66c0f4]/40 rounded-3xl rounded-tr-none px-4 py-2"><p>${msg}</p></div></div>`;scroller.scrollTop=scroller.scrollHeight;input.value='';const friend=friends.find(f=>f.id===activeId);if(friend&&friend.status==="online"){setTimeout(()=>{const reply=replies[replyIndex%replies.length];replyIndex++;scroller.innerHTML+=`<div class="flex justify-start message-bubble"><div class="max-w-[70%]bg-gray-700/70 border border-gray-600 rounded-3xl rounded-tl-none px-4 py-2"><p>${reply}</p></div></div>`;scroller.scrollTop=scroller.scrollHeight},700)}}function closeChatDialogue(){activeId=null;document.getElementById('chat-username').textContent="DevGamer_99";document.getElementById('chat-avatar').innerHTML=`<img src="https://i.pinimg.com/736x/ca/d7/e2/cad7e2162090d159623c980297d87766.jpg" class="w-full h-full object-cover">`;renderFriends();document.getElementById('chat-scroller').innerHTML=`<div class="h-full flex items-center justify-center text-gray-500 text-center"><div><i class="fa-solid fa-comments text-5xl mb-3 opacity-40"></i><p>Direct Messaging Sandbox</p><p class="text-sm">Choose a friend from the left panel</p></div></div>`}function acceptFriendInvite(){document.getElementById('incoming-request-box').style.display='none';friends.unshift({id:999,username:"RetroGlitch",status:"online",avatar:"https://i.pinimg.com/736x/ca/d7/e2/cad7e2162090d159623c980297d87766.jpg"});renderFriends()}renderFriends();const firstFriend=friends[0];if(firstFriend){openChat(firstFriend.id,firstFriend.username,firstFriend.avatar)}function initSiteWalletAndUser_Social(){const user=JSON.parse(localStorage.getItem('vaporCurrentUser'))||null;if(user){const avatar=document.getElementById('user-avatar');if(avatar)avatar.src=user.avatar||avatar.src;const chatAvatar=document.querySelector('#chat-avatar img');if(chatAvatar)chatAvatar.src=user.avatar||chatAvatar.src;const chatName=document.getElementById('chat-username');if(chatName)chatName.textContent=user.username||chatName.textContent}}initSiteWalletAndUser_Social();</script>
+</body>
+</html>
